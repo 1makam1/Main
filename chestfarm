@@ -263,7 +263,6 @@ function gui()
 	h.TextSize = 20
 end
 gui()
-local Connect
 b.Activated:Connect(function()
 	if collecting == true then
 		collecting = false
@@ -277,9 +276,6 @@ b.Activated:Connect(function()
 			game.workspace.Map["Boat Castle"].MapTeleportA.Hitbox.CanTouch = true
 		end
 		p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,10000,0)
-		if connect then
-			connect:Disconnect()
-		end
 	else
 		collecting = true
 		h.Text = "Status : 🟢"
@@ -290,12 +286,12 @@ b.Activated:Connect(function()
 			game.workspace.Map["Boat Castle"].MapTeleportB.Hitbox.CanTouch = false
 			game.workspace.Map["Boat Castle"].MapTeleportA.Hitbox.CanTouch = false
 		end
-		connect = RunService.RenderStepped:Connect(function()
-			cton()
-			checkonisland()
-			collectchest()
-			p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-4.2,0)
-		end)
 	end
 end)
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+while wait(0.1) do
+	cton()
+	checkonisland()
+	collectchest()
+	p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-4.2,0)
+end
