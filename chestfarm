@@ -275,7 +275,6 @@ b.Activated:Connect(function()
 			game.workspace.Map["Boat Castle"].MapTeleportB.Hitbox.CanTouch = true
 			game.workspace.Map["Boat Castle"].MapTeleportA.Hitbox.CanTouch = true
 		end
-		p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,10000,0)
 	else
 		collecting = true
 		h.Text = "Status : 🟢"
@@ -287,11 +286,13 @@ b.Activated:Connect(function()
 			game.workspace.Map["Boat Castle"].MapTeleportA.Hitbox.CanTouch = false
 		end
 	end
+	while collecting == true do
+		wait(0.1)
+		cton()
+		checkonisland()
+		collectchest()
+		p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-4.2,0)
+	end
+	p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,10000,0)
 end)
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-while wait(0.1) do
-	cton()
-	checkonisland()
-	collectchest()
-	p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-4.2,0)
-end
