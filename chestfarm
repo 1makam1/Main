@@ -79,14 +79,6 @@ for i,v in ipairs(game.workspace.Map:GetChildren()) do
 		end
 	end
 end
-------------------------------------------------------------------------------chest-cantouch-on---------------------------------------------------------------------------------------------------
-function cton()
-	for i, v in ipairs(game.workspace:GetDescendants()) do
-		if v.Name == "Chest1" or v.Name == "Chest2" or v.Name == "Chest3" then
-			v.CanTouch = true
-		end
-	end
-end
 ----------------------------------------------------------------------------------anti-afk----------------------------------------------------------------------------------------------------------
 local VirtualUser = game:GetService('VirtualUser')
 game:GetService('Players').LocalPlayer.Idled:Connect(function()
@@ -134,7 +126,7 @@ function checkonisland()
 		end
 	end
 end
----------------------------------------------------------------------------------------------collect-chest---------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------collect-chest------------------------------------------------------------------------------------------------
 function collectchest()
 	if onisland then
 		if not checkchest then
@@ -178,7 +170,7 @@ function collectchest()
 		end
 	end
 end
---------------------------------------------------------------------------------------fly-part--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------fly-part----------------------------------------------------------------------------------------------
 flypart = false
 for i,v in ipairs(game.Workspace:GetChildren()) do
 	if v.Name == "flypart" then
@@ -227,7 +219,7 @@ function toggleNoclip()
 		end
 	end
 end
------------------------------------------------------------------------------------------------GUI--------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------GUI----------------------------------------------------------------------------------------------------
 function gui()
 	for i,v in ipairs(game:GetService("Players").LocalPlayer.PlayerGui:GetChildren())do
 		if v.Name == "Chestfarmgui" then
@@ -325,7 +317,6 @@ b.Activated:Connect(function()
 		while collecting == true do
 		wait(0.1)
 		toggleNoclip()
-		cton()
 		checkonisland()
 		collectchest()
 		p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-4.2,0)
