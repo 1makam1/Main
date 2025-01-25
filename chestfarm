@@ -1,3 +1,4 @@
+------------------------------------------------------------------------------------------variable---------------------------------------------------------------------------------------------
 local chestcf = {}
 local islandcf = {}
 local islandnm = {}
@@ -13,16 +14,36 @@ local collecting = false
 local sea = nil
 local ongostship = false
 local connection
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local StarterGui = game:GetService("StarterGui")
+local player = Players.LocalPlayer
+-----------------------------------------------------------------------------------part-chest/stage-plus---------------------------------------------------------------------------------------------------
+cspart = Instance.new("Part")
+cspart.Parent = game.workspace
+cspart.Name = "part chest"
+cspart.Anchored = true
+cspart.Transparency = 1
+cspart.CanCollide = false
+cspart.Touched:Connect(function(part)
+	local humanoid = part.Parent:FindFirstChild("Humanoid")
+	if humanoid then
+		if collecting and onisland and checkchest then
+			csplus = true
+		end
+	end
+end)
+--------------------------------------------------------------------------------------part-island------------------------------------------------------------------------------------------------
 partis = Instance.new("Part")
 partis.Parent = game.workspace
 partis.Name = "part island"
 partis.Anchored = true
 partis.Transparency = 1
+partis.CanCollide = false
 partis.Touched:Connect(function(part)
 	local humanoid = part.Parent:FindFirstChild("Humanoid")
 	if humanoid then
 		onisland = true
-		wait(1)
 	end
 end)
 ------------------------------------------------------------------------------------------TP------------------------------------------------------------------------------------------------------
@@ -43,16 +64,7 @@ function TP(Position)
 	{CFrame = Position}
 	):Play()
 end
---------------------------------------------------------------------------------------chestplus----------------------------------------------------------------------------------------------------
-function chestplus()
-	local humanoid = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid")
-	humanoid.Touched:Connect(function(part)
-		if part.Name == "Chest1" or part.Name == "Chest2" or part.Name == "Chest3" then
-			csplus = true
-		end
-	end)
-end
------------------------------------------------------------------------------------insert-island-sea-----------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------insert-island/sea-----------------------------------------------------------------------------------------------
 for i,v in ipairs(game.workspace.Map:GetChildren()) do
 	if v.Name == "Fishmen" or v.Name == "MiniSky" or v.Name == "RaidMap" or v.Name == "Temple of Time" or v.Name == "WaterBase-Plane" or v.Name == "GhostShip" or v.Name == "IndraIsland" then
 		if v.Name == "GhostShip" then
@@ -67,6 +79,7 @@ for i,v in ipairs(game.workspace.Map:GetChildren()) do
 		end
 	end
 end
+------------------------------------------------------------------------------chest-cantouch-on---------------------------------------------------------------------------------------------------
 function cton()
 	for i, v in ipairs(game.workspace:GetDescendants()) do
 		if v.Name == "Chest1" or v.Name == "Chest2" or v.Name == "Chest3" then
@@ -80,7 +93,7 @@ game:GetService('Players').LocalPlayer.Idled:Connect(function()
 	VirtualUser:CaptureController()
 	VirtualUser:ClickButton2(Vector2.new())
 end)
--------------------------------------------------------------------check-island--------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------check-island-----------------------------------------------------------------------------------------------------
 function checkonisland()
 	if collecting == true then
 		if partis.CFrame ~= islandcf[islandnumber] then
@@ -160,6 +173,7 @@ function collectchest()
 			--print("done island")
 			wait(1)
 		else
+			cspart.CFrame = chestcf[cstage]
 			TP(chestcf[cstage])
 		end
 	end
@@ -186,19 +200,22 @@ end
 p = game.Workspace.flypart
 ---------------------------------------------------------------------------------------------noclip---------------------------------------------------------------------------------------------
 function toggleNoclip()
-	local Players = game:GetService("Players")
-	local RunService = game:GetService("RunService")
-	local StarterGui = game:GetService("StarterGui")
-	local player = Players.LocalPlayer
 	if collecting then
-		local hum = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid")
-		connection = RunService.Stepped:Connect(function()
+		if connection then
 			for _, part in pairs(player.Character:GetDescendants()) do
 				if part:IsA("BasePart") then
 					part.CanCollide = false
 				end
 			end
-		end)
+		else
+			connection = RunService.Stepped:Connect(function()
+				for _, part in pairs(player.Character:GetDescendants()) do
+					if part:IsA("BasePart") then
+						part.CanCollide = false
+					end
+				end
+			end)
+		end
 	else 
 		if connection then
 			connection:Disconnect()
@@ -281,6 +298,7 @@ function gui()
 	h.TextSize = 20
 end
 gui()
+------------------------------------------------------------------------------------toggle-on/off-----------------------------------------------------------------------------------------------------
 b.Activated:Connect(function()
 	if collecting == true then
 		collecting = false
@@ -306,7 +324,7 @@ b.Activated:Connect(function()
 	pcall(function()
 		while collecting == true do
 		wait(0.1)
-		chestplus()
+		toggleNoclip()
 		cton()
 		checkonisland()
 		collectchest()
