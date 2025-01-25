@@ -12,6 +12,7 @@ local csplus = false
 local collecting = false
 local sea = nil
 local ongostship = false
+local connection
 partis = Instance.new("Part")
 partis.Parent = game.workspace
 partis.Name = "part island"
@@ -24,6 +25,7 @@ partis.Touched:Connect(function(part)
 		wait(1)
 	end
 end)
+------------------------------------------------------------------------------------------TP------------------------------------------------------------------------------------------------------
 function TP(Position)
 	local distance = (Position.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
 	if distance < 250 then
@@ -41,12 +43,16 @@ function TP(Position)
 	{CFrame = Position}
 	):Play()
 end
-local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
-humanoid.Touched:Connect(function(part)
-	if part.Name == "Chest1" or part.Name == "Chest2" or part.Name == "Chest3" then
-		csplus = true
-	end
-end)
+--------------------------------------------------------------------------------------chestplus----------------------------------------------------------------------------------------------------
+function chestplus()
+	local humanoid = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid")
+	humanoid.Touched:Connect(function(part)
+		if part.Name == "Chest1" or part.Name == "Chest2" or part.Name == "Chest3" then
+			csplus = true
+		end
+	end)
+end
+-----------------------------------------------------------------------------------insert-island-sea-----------------------------------------------------------------------------------------------
 for i,v in ipairs(game.workspace.Map:GetChildren()) do
 	if v.Name == "Fishmen" or v.Name == "MiniSky" or v.Name == "RaidMap" or v.Name == "Temple of Time" or v.Name == "WaterBase-Plane" or v.Name == "GhostShip" or v.Name == "IndraIsland" then
 		if v.Name == "GhostShip" then
@@ -179,13 +185,13 @@ if not flypart then
 end
 p = game.Workspace.flypart
 ---------------------------------------------------------------------------------------------noclip---------------------------------------------------------------------------------------------
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local StarterGui = game:GetService("StarterGui")
-local player = Players.LocalPlayer
-local connection
-local function toggleNoclip()
+function toggleNoclip()
+	local Players = game:GetService("Players")
+	local RunService = game:GetService("RunService")
+	local StarterGui = game:GetService("StarterGui")
+	local player = Players.LocalPlayer
 	if collecting then
+		local hum = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid")
 		connection = RunService.Stepped:Connect(function()
 			for _, part in pairs(player.Character:GetDescendants()) do
 				if part:IsA("BasePart") then
@@ -193,8 +199,7 @@ local function toggleNoclip()
 				end
 			end
 		end)
-		--print("noclip on")
-	else
+	else 
 		if connection then
 			connection:Disconnect()
 		end
@@ -203,7 +208,6 @@ local function toggleNoclip()
 				part.CanCollide = true
 			end
 		end
-		--print("noclip off")
 	end
 end
 -----------------------------------------------------------------------------------------------GUI--------------------------------------------------------------------------------------------------
@@ -280,9 +284,9 @@ gui()
 b.Activated:Connect(function()
 	if collecting == true then
 		collecting = false
+		toggleNoclip()
 		h.Text = "Status : 🔴"
 		--print(collecting)
-		toggleNoclip()
 		csplus = false
 		if sea == 3 then
 			game.workspace.Map["Boat Castle"].MapTeleportB.Hitbox.CanTouch = true
@@ -290,22 +294,25 @@ b.Activated:Connect(function()
 		end
 	else
 		collecting = true
+		toggleNoclip()
 		h.Text = "Status : 🟢"
 		--print(collecting)
-		toggleNoclip()
 		csplus = false
 		if sea == 3 then
 			game.workspace.Map["Boat Castle"].MapTeleportB.Hitbox.CanTouch = false
 			game.workspace.Map["Boat Castle"].MapTeleportA.Hitbox.CanTouch = false
 		end
 	end
-	while collecting == true do
+	pcall(function()
+		while collecting == true do
 		wait(0.1)
+		chestplus()
 		cton()
 		checkonisland()
 		collectchest()
 		p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-4.2,0)
-	end
+		end
+	end)
 	TP(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
 	p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,10000,0)
 end)
