@@ -164,6 +164,8 @@ function collectchest()
 			cstage = 1
 			maxchest = 0
 			checkchest = false
+			onisland = false
+			wait(0.5)
 			--print("done island")
 		else
 			cspart.CFrame = chestcf[cstage]
@@ -234,7 +236,7 @@ function gui()
 	local f = Instance.new("Frame")
 	f.Parent = s
 	f.Size = UDim2.new(0, 300, 0, 200)
-	f.Position = UDim2.new(0, 271, 0, 153)
+	f.Position = UDim2.new(0, 6, 0, 40)
 	f.BackgroundColor3 = Color3.fromRGB(42, 42, 42)
 	f.Active = true
 	f.Draggable = true
@@ -314,15 +316,15 @@ b.Activated:Connect(function()
 			game.workspace.Map["Boat Castle"].MapTeleportA.Hitbox.CanTouch = false
 		end
 	end
-	pcall(function()
-		while collecting == true do
-		wait(0.1)
-		toggleNoclip()
-		checkonisland()
-		collectchest()
-		p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-4.2,0)
-		end
-	end)
+
+	while collecting == true do
+	wait(0.1)
+	toggleNoclip()
+	checkonisland()
+	collectchest()
+	p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-4.2,0)
+	end
+
 	TP(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
 	p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,10000,0)
 end)
