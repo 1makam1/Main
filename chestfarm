@@ -88,25 +88,20 @@ end)
 ---------------------------------------------------------------------------------check-island-----------------------------------------------------------------------------------------------------
 function checkonisland()
 	if collecting == true then
-		if partis.CFrame ~= islandcf[islandnumber] then
-			partis.CFrame = islandcf[islandnumber]
-			--print("change part location")
-			onisland = false
-		end
-		if onisland == true then
-			if cislandnumber == true then
-				islandnumber = islandnumber + 1
+		if cislandnumber == true then
+			islandnumber = islandnumber + 1
+			checkchest = false
+			--print("change island")
+			if islandnumber > maxisland then
+				islandnumber = 1
 				checkchest = false
 				--print("change island")
-				if islandnumber > maxisland then
-					islandnumber = 1
-					checkchest = false
-					--print("change island")
-				end
-				onisland = false
-				cislandnumber = false
-				--print("island",islandnumber)
 			end
+			onisland = false
+			cislandnumber = false
+			--print("island",islandnumber)
+		end
+		if onisland == true then
 			e.Text = "Island : " .. tostring(islandnm[islandnumber])
 		elseif sea == 2 and islandnm[islandnumber] == "GhostShipInterior" then
 			game.workspace.Map.GhostShip.Teleport.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
@@ -121,8 +116,13 @@ function checkonisland()
 			game.workspace.Map.GhostShipInterior.Teleport.CFrame = CFrame.new(920.477539, 154.901001, 32838.9648, 0, 0, -1, 0, 1, 0, 1, 0, 0)
 			ongostship = false
 		else
+			if partis.CFrame ~= islandcf[islandnumber] then
+				partis.CFrame = islandcf[islandnumber]
+				--print("change part location")
+				onisland = false
+			end
 			csplus = false
-			TP(islandcf[islandnumber])
+			TP(partis.CFrame)
 		end
 	end
 end
@@ -145,7 +145,8 @@ function collectchest()
 
 		if csplus == true then
 			cstage = cstage + 1
-			if cstage ~= maxchest + 1 then
+			if cstage == maxchest + 1 then
+			else
 				TP(chestcf[cstage])
 			end
 			g.Text = "Collect " .. cstage - 1 .. " / " .. maxchest
@@ -157,13 +158,13 @@ function collectchest()
 				chestcf[k] = nil
 				--print("remove chestcf")
 			end
+			e.Text = "Island : " .. tostring(islandnm[islandnumber]) .. " (done)"
+			g.Text = "Collect " .. cstage - 1 .. " / " .. maxchest .. " (done)"
 			cislandnumber = true
 			cstage = 1
 			maxchest = 0
 			checkchest = false
-			g.Text = "Collect " .. cstage - 1 .. " / " .. "nil"
 			--print("done island")
-			wait(1)
 		else
 			cspart.CFrame = chestcf[cstage]
 			TP(chestcf[cstage])
@@ -277,7 +278,7 @@ function gui()
 	g.BackgroundTransparency = 1
 	g.Position = UDim2.new(0, 0, 0, 170)
 	g.Size = UDim2.new(0, 300, 0, 20)
-	g.Text = "Collect " .. cstage - 1 .. " / " .. "nil"
+	g.Text = "Collect : " .. "nil"
 	g.TextColor3 = Color3.fromRGB(255, 255, 255)
 	g.TextSize = 15
 	h = Instance.new("TextLabel")
