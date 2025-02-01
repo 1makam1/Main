@@ -153,7 +153,7 @@ function collectchest()
 			--print(cstage)
 			wait(0.5)
 			csplus = false
-		elseif cstage == maxchest + 1 then
+		elseif cstage >= maxchest + 1 then
 			for k in pairs(chestcf) do
 				chestcf[k] = nil
 				--print("remove chestcf")
@@ -230,16 +230,17 @@ function gui()
 			wait(0.5)
 		end
 	end
-	local s = Instance.new("ScreenGui")
+	s = Instance.new("ScreenGui")
 	s.Name = "Chestfarmgui"
 	s.Parent = game:GetService("Players").LocalPlayer.PlayerGui
-	local f = Instance.new("Frame")
+	f = Instance.new("Frame")
 	f.Parent = s
 	f.Size = UDim2.new(0, 300, 0, 200)
 	f.Position = UDim2.new(0, 6, 0, 40)
 	f.BackgroundColor3 = Color3.fromRGB(42, 42, 42)
 	f.Active = true
-	f.Draggable = true
+	-- f.Draggable = true
+	-- f.Selectable = true
 	local corner = Instance.new("UICorner")
 	corner.Parent = f
 	corner.CornerRadius = UDim.new(0, 10)
@@ -291,8 +292,58 @@ function gui()
 	h.Text = "Status : 🔴"
 	h.TextColor3 = Color3.fromRGB(255, 255, 255)
 	h.TextSize = 20
+	x = Instance.new("TextButton")
+	x.Parent = f
+	x.BackgroundColor3 = Color3.fromRGB(165, 0, 0)
+	x.Size = UDim2.new(0, 30, 0, 30)
+	x.Position = UDim2.new(0, 270, 0, 0)
+	x.Text = "X"
+	x.TextSize = 15
+	x.TextColor3 = Color3.fromRGB(0, 0, 0)
+	local corner2 = Instance.new("UICorner")
+	corner2.Parent = x
+	corner2.CornerRadius = UDim.new(0, 5)
 end
 gui()
+local uis = game:GetService("UserInputService")
+local dargging
+local draginput
+local dragstart
+local startpos
+local function update(input)
+	local delta = input.Position - dragstart
+	f.Position = UDim2.new(startpos.X.Scale, startpos.X.Offset + delta.X, startpos.Y.Scale, startpos.Y.Offset + delta.Y)
+end
+f.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragstart = input.Position
+		startpos = f.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+f.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touce then
+		draginput = input
+	end
+end)
+uis.InputChanged:Connect(function(input)
+	if input == draginput and dragging then
+		if f.Visible then
+			update(input)
+		end
+	end
+end)
+--------------------------------------------------------------------------------------close-gui-----------------------------------------------------------------------------------------------------
+x.Activated:Connect(function()
+	collecting = false
+	s:Destroy()
+end)
 ------------------------------------------------------------------------------------toggle-on/off-----------------------------------------------------------------------------------------------------
 b.Activated:Connect(function()
 	if collecting == true then
@@ -316,15 +367,15 @@ b.Activated:Connect(function()
 			game.workspace.Map["Boat Castle"].MapTeleportA.Hitbox.CanTouch = false
 		end
 	end
-
-	while collecting == true do
-	wait(0.1)
-	toggleNoclip()
-	checkonisland()
-	collectchest()
-	p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-4.2,0)
-	end
-
+	pcall(function()
+		while collecting == true do
+			wait(0.1)
+			toggleNoclip()
+			checkonisland()
+			collectchest()
+			p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-4.2,0)
+		end
+	end)
 	TP(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
 	p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,10000,0)
 end)
