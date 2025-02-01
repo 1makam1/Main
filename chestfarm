@@ -119,7 +119,6 @@ function checkonisland()
 			if partis.CFrame ~= islandcf[islandnumber] then
 				partis.CFrame = islandcf[islandnumber]
 				--print("change part location")
-				onisland = false
 			end
 			csplus = false
 			TP(partis.CFrame)
