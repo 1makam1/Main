@@ -19,12 +19,21 @@ local RunService = game:GetService("RunService")
 local StarterGui = game:GetService("StarterGui")
 local player = Players.LocalPlayer
 -----------------------------------------------------------------------------------part-chest/stage-plus---------------------------------------------------------------------------------------------------
-cspart = Instance.new("Part")
-cspart.Parent = game.workspace
-cspart.Name = "part chest"
-cspart.Anchored = true
-cspart.Transparency = 1
-cspart.CanCollide = false
+local iscspart = false
+for i,v in ipairs(game.workspace:GetDescendants()) do
+	if v.Name == "part chest" then
+		cspart = v
+		iscspart = true
+	end
+end
+if not iscspart then
+	cspart = Instance.new("Part")
+	cspart.Parent = game.workspace
+	cspart.Name = "part chest"
+	cspart.Anchored = true
+	cspart.Transparency = 1
+	cspart.CanCollide = false
+end
 cspart.Touched:Connect(function(part)
 	local humanoid = part.Parent:FindFirstChild("Humanoid")
 	if humanoid then
@@ -34,12 +43,21 @@ cspart.Touched:Connect(function(part)
 	end
 end)
 --------------------------------------------------------------------------------------part-island------------------------------------------------------------------------------------------------
-partis = Instance.new("Part")
-partis.Parent = game.workspace
-partis.Name = "part island"
-partis.Anchored = true
-partis.Transparency = 1
-partis.CanCollide = false
+local ispartis = false
+for i,v in ipairs(game.workspace:GetDescendants()) do
+	if v.Name == "part island" then
+		partis = v
+		ispartis = true
+	end
+end
+if not ispartis then
+	partis = Instance.new("Part")
+	partis.Parent = game.workspace
+	partis.Name = "part island"
+	partis.Anchored = true
+	partis.Transparency = 1
+	partis.CanCollide = false
+end
 partis.Touched:Connect(function(part)
 	local humanoid = part.Parent:FindFirstChild("Humanoid")
 	if humanoid then
@@ -108,16 +126,22 @@ function checkonisland()
 		if onisland == true then
 			e.Text = "Island : " .. tostring(islandnm[islandnumber])
 		elseif sea == 2 and islandnm[islandnumber] == "GhostShipInterior" and ongostship == false then
+			game.workspace.Map.GhostShip.Teleport.CanTouch = true
 			game.workspace.Map.GhostShip.Teleport.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-			wait(3)
-			TP(partis.CFrame)
+			wait(0.1)
 			game.workspace.Map.GhostShip.Teleport.CFrame = CFrame.new(-6496.89795, 89.034996, -116.50946, 0.819155693, 0, -0.573571265, 0, -1.00000024, -0, -0.573571265, 0, -0.819156051)
+			wait(2)
+			game.workspace.Map.GhostShip.Teleport.CanTouch = false
+			TP(partis.CFrame)
+			wait(2)
 			ongostship = true
-			wait(1)
 		elseif sea == 2 and ongostship == true then
+			game.workspace.Map.GhostShipInterior.Teleport.CanTouch = true
 			game.workspace.Map.GhostShipInterior.Teleport.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-			wait(3)
+			wait(0.1)
 			game.workspace.Map.GhostShipInterior.Teleport.CFrame = CFrame.new(920.477539, 154.901001, 32838.9648, 0, 0, -1, 0, 1, 0, 1, 0, 0)
+			wait(2)
+			game.workspace.Map.GhostShipInterior.Teleport.CanTouch = false
 			ongostship = false
 		else
 			csplus = false
@@ -170,7 +194,7 @@ function collectchest()
 	end
 end
 --------------------------------------------------------------------------------------------fly-part----------------------------------------------------------------------------------------------
-flypart = false
+local flypart = false
 for i,v in ipairs(game.Workspace:GetChildren()) do
 	if v.Name == "flypart" then
 		flypart = true
@@ -351,6 +375,9 @@ b.Activated:Connect(function()
 		if sea == 3 then
 			game.workspace.Map["Boat Castle"].MapTeleportB.Hitbox.CanTouch = true
 			game.workspace.Map["Boat Castle"].MapTeleportA.Hitbox.CanTouch = true
+		elseif sea == 2 then
+			game.workspace.Map.GhostShip.Teleport.CanTouch = true
+			game.workspace.Map.GhostShipInterior.Teleport.CanTouch = true
 		end
 	else
 		collecting = true
@@ -361,6 +388,9 @@ b.Activated:Connect(function()
 		if sea == 3 then
 			game.workspace.Map["Boat Castle"].MapTeleportB.Hitbox.CanTouch = false
 			game.workspace.Map["Boat Castle"].MapTeleportA.Hitbox.CanTouch = false
+		elseif sea == 2 then
+			game.workspace.Map.GhostShip.Teleport.CanTouch = false
+			game.workspace.Map.GhostShipInterior.Teleport.CanTouch = false
 		end
 	end
 	pcall(function()
