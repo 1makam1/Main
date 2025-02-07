@@ -101,6 +101,10 @@ function checkonisland()
 			cislandnumber = false
 			--print("island",islandnumber)
 		end
+		if partis.CFrame ~= islandcf[islandnumber] then
+			partis.CFrame = islandcf[islandnumber]
+			--print("change part location")
+		end
 		if onisland == true then
 			e.Text = "Island : " .. tostring(islandnm[islandnumber])
 		elseif sea == 2 and islandnm[islandnumber] == "GhostShipInterior" and ongostship == false then
@@ -116,10 +120,6 @@ function checkonisland()
 			game.workspace.Map.GhostShipInterior.Teleport.CFrame = CFrame.new(920.477539, 154.901001, 32838.9648, 0, 0, -1, 0, 1, 0, 1, 0, 0)
 			ongostship = false
 		else
-			if partis.CFrame ~= islandcf[islandnumber] then
-				partis.CFrame = islandcf[islandnumber]
-				--print("change part location")
-			end
 			csplus = false
 			TP(partis.CFrame)
 		end
