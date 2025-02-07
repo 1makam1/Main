@@ -106,7 +106,7 @@ function checkonisland()
 		elseif sea == 2 and islandnm[islandnumber] == "GhostShipInterior" and ongostship == false then
 			game.workspace.Map.GhostShip.Teleport.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
 			wait(3)
-			TP(islandcf[islandnumber])
+			TP(partis.CFrame)
 			game.workspace.Map.GhostShip.Teleport.CFrame = CFrame.new(-6496.89795, 89.034996, -116.50946, 0.819155693, 0, -0.573571265, 0, -1.00000024, -0, -0.573571265, 0, -0.819156051)
 			ongostship = true
 			wait(1)
