@@ -5,3 +5,4 @@ if tp then
 		game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, jobid, game:GetService("Players").localPlayer)
 	end
 end
+print(jobid)
