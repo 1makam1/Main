@@ -1,4 +1,4 @@
-local jobid = "6ed43511-ce00-470e-aafb-a90381a5d1f9"
+local jobid = "asdasdasdasd"
 local tp = false
 if tp then
 	if game.JobId ~= jobid then
