@@ -67,7 +67,15 @@ end)
 ------------------------------------------------------------------------------------------TP------------------------------------------------------------------------------------------------------
 function TP(Position)
 	local distance = (Position.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
-	speed = 200
+	if distance < 250 then
+		speed = 500
+	elseif distance < 500 then
+		speed = 400
+	elseif distance < 1000 then
+		speed = 350
+	else
+		speed = 200
+	end
 	game:GetService("TweenService"):Create(
 	game.Players.LocalPlayer.Character.HumanoidRootPart, 
 	TweenInfo.new(distance/speed, Enum.EasingStyle.Linear),
@@ -185,26 +193,6 @@ function collectchest()
 		end
 	end
 end
---------------------------------------------------------------------------------------------fly-part----------------------------------------------------------------------------------------------
-local flypart = false
-for i,v in ipairs(game.Workspace:GetChildren()) do
-	if v.Name == "flypart" then
-		flypart = true
-		--print("foundflypart")
-	end
-end
-if not flypart then
-	--print("noflypart")
-	isp = Instance.new("Part")
-	isp.Parent = game.workspace
-	isp.Name = "flypart"
-	isp.Anchored = true
-	isp.Size = Vector3.new(1000, 1, 1000)
-	isp.Transparency = 1
-	flypart = true
-	--print("createflypart")
-end
-p = game.Workspace.flypart
 ---------------------------------------------------------------------------------------------noclip---------------------------------------------------------------------------------------------
 function toggleNoclip()
 	if collecting then
@@ -353,7 +341,7 @@ uis.InputChanged:Connect(function(input)
 end)
 --------------------------------------------------------------------------------------close-gui-----------------------------------------------------------------------------------------------------
 x.Activated:Connect(function()
-	collecting = false
+	closeall = true
 	s:Destroy()
 end)
 ------------------------------------------------------------------------------------toggle-on/off-----------------------------------------------------------------------------------------------------
@@ -387,13 +375,30 @@ b.Activated:Connect(function()
 	end
 	pcall(function()
 		while collecting == true do
-			wait(0.1)
-			toggleNoclip()
-			checkonisland()
-			collectchest()
-			p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-4.2,0)
+			local hrp = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
+			bv = hrp:FindFirstChildWhichIsA("BodyVelocity")
+			if not bv then
+				bv = Instance.new("BodyVelocity")
+				bv.Parent = hrp
+				bv.MaxForce = Vector3.new(0,math.huge,0)
+				bv.Velocity = hrp.CFrame.Position * 0
+				wait(0.2)
+			end
+
+			if not closeall then
+				wait(0.1)
+				toggleNoclip()
+				checkonisland()
+				collectchest()
+				bv.MaxForce = Vector3.new(0,math.huge,0)
+			else
+				collecting = false
+				bv:Destroy()
+			end
 		end
+		if bv then
+			bv.MaxForce = Vector3.new(0,0,0)
+		end
+		TP(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
 	end)
-	TP(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
-	p.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,10000,0)
 end)
