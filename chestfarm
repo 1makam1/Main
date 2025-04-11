@@ -67,7 +67,15 @@ end)
 ------------------------------------------------------------------------------------------TP------------------------------------------------------------------------------------------------------
 function TP(Position)
 	local distance = (Position.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
-	speed = 200
+	if distance < 250 then
+		speed = 500
+	elseif distance < 500 then
+		speed = 400
+	elseif distance < 1000 then
+		speed = 350
+	else
+		speed = 200
+	end
 	game:GetService("TweenService"):Create(
 	game.Players.LocalPlayer.Character.HumanoidRootPart, 
 	TweenInfo.new(distance/speed, Enum.EasingStyle.Linear),
@@ -350,6 +358,11 @@ b.Activated:Connect(function()
 		elseif sea == 2 then
 			game.workspace.Map.GhostShip.Teleport.CanTouch = true
 			game.workspace.Map.GhostShipInterior.Teleport.CanTouch = true
+			for i,v in ipairs(workspace:GetDescendants())do
+				if v:IsA("Seat") then
+				    v.CanTouch = true
+				end
+			end
 		end
 	else
 		collecting = true
@@ -363,6 +376,11 @@ b.Activated:Connect(function()
 		elseif sea == 2 then
 			game.workspace.Map.GhostShip.Teleport.CanTouch = false
 			game.workspace.Map.GhostShipInterior.Teleport.CanTouch = false
+			for i,v in ipairs(workspace:GetDescendants())do
+				if v:IsA("Seat") then
+				    v.CanTouch = false
+				end
+			end
 		end
 	end
 	pcall(function()
