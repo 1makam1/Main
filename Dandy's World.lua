@@ -1,3 +1,4 @@
+-----------------------------[[Variable]]------------------------------------------------------------------------------------------------------------------------------
 local humanoid = game:GetService("Players").LocalPlayer.Character.Humanoid
 local normalspeed = game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed
 local uis = game:GetService("UserInputService")
@@ -16,6 +17,7 @@ local speeditem2 = false
 local Floor = workspace.Info.Floor
 local isClownHorn = nil
 local isRibbonSpool = nil
+----------------------------------Dictionary--------------------------------------------------------------------------------------------------------------------
 local trinket = {
     PinkBow = 7.5,
     ClownHorn = 10,
@@ -48,6 +50,7 @@ local speedof = {
     Vee = 22.5,
     Yatta = 27.5,
 }
+----------------------------find run speed trinket----------------------------------------------------------------------------------------------------------------
 for i,v in trinket do
     if usertrinket1 == i then
         if usertrinket1 == "ClownHorn" then
@@ -66,6 +69,7 @@ for i,v in trinket do
         speeditem2 = true
     end
 end
+------------------------------------lift-------------------------------------------------------------------------------------------------------------------------
 local liftp = Instance.new("Part")
 liftp.Name = "liftpart"
 liftp.Anchored = true
@@ -85,6 +89,7 @@ uis.InputBegan:Connect(function(input)
         end
     end
 end)
+-------------------------------[[Gui]]---------------------------------------------------------------------------------------------------------------------------------
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -94,11 +99,12 @@ local Window = Fluent:CreateWindow({
     SubTitle = "free script",
     TabWidth = 150,
     Size = UDim2.fromOffset(580, 460),
-    Acrylic = false,
+    Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
     Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.LeftControl
+    MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
 })
 
+--Fluent provides Lucide Icons https://lucide.dev/icons/ for the tabs, icons are optional
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "home" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
@@ -110,10 +116,11 @@ do
     Fluent:Notify({
         Title = "Dandy's World",
         Content = "Script Loaded success",
-        SubContent = "", 
-        Duration = 5 
+        SubContent = "", -- Optional
+        Duration = 5 -- Set to nil to make the notification not disappear
     })
     
+    ----------------------------[[BrightMode]]-------------------------------------------------------------------------------------------------------------------
     local BrightMode = Tabs.Main:AddToggle("BrightMode", {Title = "Bright Mode", Default = false })
     BrightMode:OnChanged(function()
         if Options.BrightMode.Value then
@@ -126,8 +133,9 @@ do
         	light.Ambient = Color3.fromRGB(0, 0, 0)
         end
     end)
+    --Options.BrightMode:SetValue(false)
     
-    
+    ----------------------------[[HighlightGenerator]]-------------------------------------------------------------------------------------------------------------------
     local HighlightGenerator = Tabs.Main:AddToggle("HighlightGenerator", {Title = "Highlight Generator", Default = false })
     HighlightGenerator:OnChanged(function()
         if Options.HighlightGenerator.Value then
@@ -136,8 +144,9 @@ do
             hg = false
         end
     end)
-   
+    --Options.HighlightGenerator:SetValue(false)
     
+    ----------------------------[[HighlightItems]]-------------------------------------------------------------------------------------------------------------------
     local HighlightItems = Tabs.Main:AddToggle("HighlightItems", {Title = "Highlight Items", Default = false })
     HighlightItems:OnChanged(function()
         if Options.HighlightItems.Value then
@@ -146,13 +155,14 @@ do
             hi = false
         end
     end)
-
+    --Options.HighlightItems:SetValue(false)
     
+    ----------------------------[[HighlightPlayers]]-------------------------------------------------------------------------------------------------------------------
     local HighlightPlayers = Tabs.Main:AddToggle("HighlightPlayers", {Title = "Highlight Players", Default = false })
     HighlightPlayers:OnChanged(function()
         if Options.HighlightPlayers.Value then
             for i, v in ipairs(game.workspace.InGamePlayers:GetChildren())do
-        	    local ish = v:WaitForChildWhichIsA("Highlight")
+        	    local ish = v:FindFirstChildWhichIsA("Highlight")
         	    if not ish then
         	        local h = Instance.new("Highlight")
                 	h.FillColor = Color3.fromRGB(0, 255, 0)
@@ -161,15 +171,16 @@ do
             end
         else
             for i, v in ipairs(game.workspace.InGamePlayers:GetChildren())do
-        	    local ish = v:WaitForChildWhichIsA("Highlight")
+        	    local ish = v:FindFirstChildWhichIsA("Highlight")
         	    if ish then
         	        ish:Destroy()
         	    end
             end
         end
     end)
-
+    --Options.HighlightPlayers:SetValue(false)
     
+    ----------------------------[[HighlightTwisted]]-------------------------------------------------------------------------------------------------------------------
     local HighlightTwisted = Tabs.Main:AddToggle("HighlightTwisted", {Title = "Highlight Twisted", Default = false })
     HighlightTwisted:OnChanged(function()
         if Options.HighlightTwisted.Value then
@@ -178,7 +189,9 @@ do
             ht = false
         end
     end)
+    --Options.HighlightTwisted:SetValue(false)
     
+    ----------------------------[[Lift]]-------------------------------------------------------------------------------------------------------------------
     local Lift = Tabs.Main:AddToggle("Lift", {Title = "Lift", Description = "Space : up | Q : down", Default = false })
     Lift:OnChanged(function()
         if Options.Lift.Value then
@@ -190,22 +203,29 @@ do
             game:GetService("TweenService"):Create(liftp, TweenInfo.new(1), {CFrame = CFrame.new(liftp.CFrame.Position.X, 143, liftp.CFrame.Position.Z, 1, 0, 0, 0, 1, 0,-0, -0, -1)}):Play()
         end
     end)
+    --Options.Lift:SetValue(false)
     
+    ----------------------------[[ChangeSpeed]]-------------------------------------------------------------------------------------------------------------------
     local ChangeSpeed = Tabs.Main:AddSlider("ChangeSpeed", {
         Title = "Change Speed",
         Description = "⭐ = 20 \n⭐⭐ = 22.5 \n⭐⭐⭐ = 25 \n⭐⭐⭐⭐ = 27.5 \n⭐⭐⭐⭐⭐= 30",
         Default = 20,
         Min = 20,
         Max = 35,
-        Rounding = 0,
+        Rounding = 0, -- ทศนิยม
         Callback = function(Value)
         end
     })
 
     ChangeSpeed:OnChanged(function(Value)
-
+        -- if speedchange then
+        --     Options.AutoSpeedChange:SetValue(false)
+        --     humanoid.WalkSpeed = Value
+        -- end
     end)
+    --ChangeSpeed:SetValue(20)
     
+    ----------------------------[[UseChangeSpeed]]-------------------------------------------------------------------------------------------------------------------
     local UseChangeSpeed = Tabs.Main:AddToggle("UseChangeSpeed", {Title = "Use Change Speed", Default = false })
     UseChangeSpeed:OnChanged(function()
         if Options.UseChangeSpeed.Value then
@@ -217,7 +237,9 @@ do
             speedchange = false
         end
     end)
+    --Options.UseChangeSpeed:SetValue(false)
     
+    ----------------------------[[AutoSpeedChange]]-------------------------------------------------------------------------------------------------------------------
     local AutoSpeedChange = Tabs.Main:AddToggle("AutoSpeedChange", {Title = "Auto Change Speed To Run Speed", Default = false })
     AutoSpeedChange:OnChanged(function()
         if Options.AutoSpeedChange.Value then
@@ -228,17 +250,20 @@ do
             humanoid.WalkSpeed = normalspeed
         end
     end)
+    --Options.AutoSpeedChange:SetValue(false)
 end
-Window:SelectTab(1)
+Window:SelectTab(1) -- select default tab
 
 InterfaceManager:SetLibrary(Fluent)
 InterfaceManager:SetFolder("dandy world free script")
 InterfaceManager:BuildInterfaceSection(Tabs.Settings)
 
+------------------------------------Main--------------------------------------------------------------------------------------------------------------------------
 while true do
     if speedchange then
         humanoid.WalkSpeed = Options.ChangeSpeed.Value
     end
+    ----------------------------speed change-----------------------------------------------------------------------------------------------------------------------
     if cal then
         if isClownHorn == 1 or isClownHorn == 2 then
             if tonumber(Floor.Value) % 2 == 0 then
@@ -277,31 +302,33 @@ while true do
     end
 	for i,v in ipairs(game.workspace.CurrentRoom:GetChildren())do
 		for a,b in ipairs(v:GetChildren())do
+			------------------Monster highlight-------------------------------------------------------------------------------------------------------------------
 			if b.Name == "Monsters" then
 				for x,y in ipairs(b:GetChildren())do
 					if ht then
-					    local ish = y:WaitForChildWhichIsA("Highlight")
+					    local ish = y:FindFirstChildWhichIsA("Highlight")
 					    if not ish then
         					local h = Instance.new("Highlight")
         					h.Parent = y
     					end
     				else
-    				    local ish = y:WaitForChildWhichIsA("Highlight")
+    				    local ish = y:FindFirstChildWhichIsA("Highlight")
 					    if ish then
 					        ish:Destroy()
 					    end
 				    end
 				end
 			end
+			----------------generator highlight---------------------------------------------------------------------------------------------------------------------
 			if b.Name == "Generators"then
 				for x,y in ipairs(b:GetChildren())do
 					if hg then
-					    local ish = y:WaitForChildWhichIsA("Highlight")
+					    local ish = y:FindFirstChildWhichIsA("Highlight")
 					    if not ish then
 					        local h = Instance.new("Highlight")
 					        h.Parent = y
 					    else
-					        local h = y:WaitForChildWhichIsA("Highlight")
+					        local h = y:FindFirstChildWhichIsA("Highlight")
 					        if y.Stats.Completed.Value == true then
         						h.FillColor = Color3.fromRGB(0, 0, 255)
         					else
@@ -309,8 +336,9 @@ while true do
         					end
     					end
 					
+					------Check connie----------------------------------------------
     					if y.Stats.Connie.Value == true then
-    						local isb = y:WaitForChild("Light"):WaitForChildWhichIsA("BillboardGui")
+    						local isb = y:FindFirstChild("Light"):FindFirstChildWhichIsA("BillboardGui")
     						if not isb then
     							local b = Instance.new("BillboardGui")
     							b.Parent = y.Light
@@ -327,27 +355,28 @@ while true do
     							t.TextStrokeTransparency = 0
     						end
     					else
-    					    local isb = y:WaitForChild("Light"):WaitForChildWhichIsA("BillboardGui")
+    					    local isb = y:FindFirstChild("Light"):FindFirstChildWhichIsA("BillboardGui")
     					    if isb then
     					        isb:Destroy()
     					    end
     					end
 					else
-					    local ish = y:WaitForChildWhichIsA("Highlight")
+					    local ish = y:FindFirstChildWhichIsA("Highlight")
 					    if ish then
 					        ish:Destroy()
 					    end
-						local isb = y:WaitForChild("Light"):WaitForChildWhichIsA("BillboardGui")
+						local isb = y:WaitForChild("Light"):FindFirstChildWhichIsA("BillboardGui")
 						if isb then
 							isb:Destroy()
 						end
 					end
 				end
 			end
+			--------------------Items text------------------------------------------------------------------------------------------------------------------------
 			if b.Name == "Items" then
 				for x,y in ipairs(b:GetChildren())do
 					if hi then
-					    local isb = y:WaitForChildWhichIsA("BillboardGui")
+					    local isb = y:FindFirstChildWhichIsA("BillboardGui")
 					    if not isb then
         					local b = Instance.new("BillboardGui")
         					b.Parent = y
@@ -369,7 +398,7 @@ while true do
         					end
     					end
     				else
-    				    local isb = y:WaitForChildWhichIsA("BillboardGui")
+    				    local isb = y:FindFirstChildWhichIsA("BillboardGui")
 						if isb then
 							isb:Destroy()
 						end
