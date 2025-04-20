@@ -109,6 +109,13 @@ local humanoid = game:GetService("Players").LocalPlayer.Character.Humanoid
 local uis = game:GetService("UserInputService")
 local isshift = false
 uis.InputBegan:Connect(function(input)
+	if input.KeyCode == Enum.KeyCode.Space then
+		if humanoid then
+			if humanoid.FloorMaterial ~= Enum.Material.Air then
+				humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+			end
+		end
+	end
 	if input.KeyCode == Enum.KeyCode.LeftShift then
 		isshift = true
 	end
