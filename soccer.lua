@@ -1,5 +1,5 @@
-local sizeofhitbox = hitbox.Size
-local sizeoftacklehitbox = tacklehitbox.Size
+local sizeofhitbox = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Hitbox").Size
+local sizeoftacklehitbox = game:GetService("Players").LocalPlayer.Character:FindFirstChild("TackleHitbox").Size
 local sizex
 local sizey
 local sizez
