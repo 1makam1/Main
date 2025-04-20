@@ -1,5 +1,3 @@
-local hitbox = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Hitbox")
-local tacklehitbox = game:GetService("Players").LocalPlayer.Character:FindFirstChild("TackleHitbox")
 local sizeofhitbox = hitbox.Size
 local sizeoftacklehitbox = tacklehitbox.Size
 local sizex
@@ -128,6 +126,8 @@ end)
 
 task.spawn(function()
 	while wait() do
+        local hitbox = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Hitbox")
+        local tacklehitbox = game:GetService("Players").LocalPlayer.Character:FindFirstChild("TackleHitbox")
 		if Options.DeleteStamina.Value then
 			if isshift then
 				humanoid.WalkSpeed = 27
