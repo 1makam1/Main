@@ -4,6 +4,7 @@ local sizex
 local sizey
 local sizez
 local tran
+local fov
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
@@ -84,8 +85,26 @@ do
     })
     
 	Tabs.Main:AddSection("Stamina")
-	
     local DeleteStamina = Tabs.Main:AddToggle("DeleteStamina", {Title = "Delete Stamina", Default = false })
+
+	Tabs.Main:AddSection("etc")
+    local fovTabs = Tabs.Main:AddToggle("fovTabs", {Title = "Change field of view", Default = false })
+    fovTabs:OnChanged(function()
+        if not Options.fovTabs.Value then
+            workspace.Camera.FieldOfView = 70
+        end
+    end)
+    
+    local fovslider = Tabs.Main:AddSlider("fovslider", {
+        Title = "Field of view :",
+        Default = 2,
+        Min = 10,
+        Max = 120,
+        Rounding = 0,
+        Callback = function(Value)
+            fov = Value
+        end
+    })
 end
 Window:SelectTab(1) -- select default tab
 InterfaceManager:SetLibrary(Fluent)
@@ -124,28 +143,29 @@ uis.InputEnded:Connect(function(input)
 	end
 end)
 
-task.spawn(function()
-	while wait() do
-        local hitbox = game:GetService("Players").LocalPlayer.Character:WaitForChild("Hitbox")
-        local tacklehitbox = game:GetService("Players").LocalPlayer.Character:WaitForChild("TackleHitbox")
-		if Options.DeleteStamina.Value then
-			if isshift then
-				humanoid.WalkSpeed = 27
-				game:GetService("Players").LocalPlayer.PlayerGui.GameGui.MatchHUD.EnergyBars.Stamina.Visible = false
-			end
-		else
-			game:GetService("Players").LocalPlayer.PlayerGui.GameGui.MatchHUD.EnergyBars.Stamina.Visible = true
+game:GetService("RunService").RenderStepped:Connect(function()
+	local hitbox = game:GetService("Players").LocalPlayer.Character:WaitForChild("Hitbox")
+	local tacklehitbox = game:GetService("Players").LocalPlayer.Character:WaitForChild("TackleHitbox")
+	if Options.DeleteStamina.Value then
+		if isshift then
+			humanoid.WalkSpeed = 27
+			game:GetService("Players").LocalPlayer.PlayerGui.GameGui.MatchHUD.EnergyBars.Stamina.Visible = false
 		end
-		if Options.ChangeHitbox.Value then
-			hitbox.Size = Vector3.new(sizex, sizey, sizez)
-			tacklehitbox.Size = Vector3.new(sizex, sizey, sizez)
-			hitbox.Transparency = tran
-			tacklehitbox.Transparency = tran
-		else
-			hitbox.Size = sizeofhitbox
-			tacklehitbox.Size = sizeoftacklehitbox
-			hitbox.Transparency = 1
-			tacklehitbox.Transparency = 1
-		end
+	else
+		game:GetService("Players").LocalPlayer.PlayerGui.GameGui.MatchHUD.EnergyBars.Stamina.Visible = true
 	end
+	if Options.ChangeHitbox.Value then
+		hitbox.Size = Vector3.new(sizex, sizey, sizez)
+		tacklehitbox.Size = Vector3.new(sizex, sizey, sizez)
+		hitbox.Transparency = tran
+		tacklehitbox.Transparency = tran
+	else
+		hitbox.Size = sizeofhitbox
+		tacklehitbox.Size = sizeoftacklehitbox
+		hitbox.Transparency = 1
+		tacklehitbox.Transparency = 1
+	end
+	if Options.fovTabs.Value then
+        workspace.Camera.FieldOfView = fov
+    end
 end)
