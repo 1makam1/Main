@@ -125,7 +125,8 @@ SaveManager:LoadAutoloadConfig()
 local humanoid = game:GetService("Players").LocalPlayer.Character.Humanoid
 local uis = game:GetService("UserInputService")
 local isshift = false
-uis.InputBegan:Connect(function(input)
+uis.InputBegan:Connect(function(input, chat)
+	if chat then return end
 	if input.KeyCode == Enum.KeyCode.Space then
 		if humanoid then
 			if humanoid.FloorMaterial ~= Enum.Material.Air then
