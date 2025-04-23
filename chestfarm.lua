@@ -75,20 +75,22 @@ function TP(Position)
 	):Play()
 end
 -----------------------------------------------------------------------------------insert-island/sea-----------------------------------------------------------------------------------------------
-for i,v in ipairs(game.workspace.Map:GetChildren()) do
-	if v.Name == "Fishmen" or v.Name == "MiniSky" or v.Name == "RaidMap" or v.Name == "Temple of Time" or v.Name == "WaterBase-Plane" or v.Name == "GhostShip" or v.Name == "IndraIsland" or v.Name == "CandyCane" or v.Name == "FortBuilderPotentialSurfaces" then
-		if v.Name == "GhostShip" then
-			sea = 2
-		end
-	else
-		table.insert(islandcf, v.WorldPivot)
-		table.insert(islandnm, v.Name)
-		maxisland = maxisland + 1
-		if v.Name == "Boat Castle" then
-			sea = 3
+pcall(funtion()
+	for i,v in ipairs(game.workspace.Map:GetChildren()) do
+		if v.Name == "Fishmen" or v.Name == "MiniSky" or v.Name == "RaidMap" or v.Name == "Temple of Time" or v.Name == "WaterBase-Plane" or v.Name == "GhostShip" or v.Name == "IndraIsland" or v.Name == "CandyCane" or v.Name == "FortBuilderPotentialSurfaces" then
+			if v.Name == "GhostShip" then
+				sea = 2
+			end
+		else
+			table.insert(islandcf, v.WorldPivot)
+			table.insert(islandnm, v.Name)
+			maxisland = maxisland + 1
+			if v.Name == "Boat Castle" then
+				sea = 3
+			end
 		end
 	end
-end
+end)
 ----------------------------------------------------------------------------------anti-afk----------------------------------------------------------------------------------------------------------
 local VirtualUser = game:GetService('VirtualUser')
 game:GetService('Players').LocalPlayer.Idled:Connect(function()
