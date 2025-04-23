@@ -76,7 +76,7 @@ function TP(Position)
 end
 -----------------------------------------------------------------------------------insert-island/sea-----------------------------------------------------------------------------------------------
 for i,v in ipairs(game.workspace.Map:GetChildren()) do
-	if v.Name == "Fishmen" or v.Name == "MiniSky" or v.Name == "RaidMap" or v.Name == "Temple of Time" or v.Name == "WaterBase-Plane" or v.Name == "GhostShip" or v.Name == "IndraIsland" or v.Name == "CandyCane" or v.Name == "FortBuilderPotentialSurfaces" or v.Name == "FortBuilderPlacedSurfaces" then
+	if v.Name == "Fishmen" or v.Name == "MiniSky" or v.Name == "RaidMap" or v.Name == "Temple of Time" or v.Name == "WaterBase-Plane" or v.Name == "GhostShip" or v.Name == "IndraIsland" or v.Name == "CandyCane" or v.Name == "FortBuilderPotentialSurfaces" or v.Name == "FortBuilderPlacedSurfaces" or v.Name == "StagePart" then
 		if v.Name == "GhostShip" then
 			sea = 2
 		end
