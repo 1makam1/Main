@@ -39,7 +39,7 @@ do
     })
 
 	Tabs.Main:AddSection("Hitbox")
-
+	local HideHitbox = Tabs.Main:AddToggle("HideHitbox", {Title = "Disable Hitbox When Got Ball", Default = false })
     local ChangeHitbox = Tabs.Main:AddToggle("ChangeHitbox", {Title = "Change Hitbox", Default = false })
 
 	local HitboxSliderx = Tabs.Main:AddSlider("HitboxSliderx", {
@@ -159,6 +159,16 @@ game:GetService("RunService").RenderStepped:Connect(function()
 	local humanoid = game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid")
 	local hitbox = game:GetService("Players").LocalPlayer.Character:WaitForChild("Hitbox")
 	local tacklehitbox = game:GetService("Players").LocalPlayer.Character:WaitForChild("TackleHitbox")
+	if Options.HideHitbox.Value then
+		local isball = humanoid.Parent.Ball:FindFirstChild("Texture")
+		if isball then
+			hitbox.CanTouch = false
+			tacklehitbox.CanTouch = false
+		else
+			hitbox.CanTouch = true
+			tacklehitbox.CanTouch = true
+		end
+	end
 	if onspace then
 		if humanoid.FloorMaterial ~= Enum.Material.Air then
 			if humanoid.WalkSpeed ~= 0 then
