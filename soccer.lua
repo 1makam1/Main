@@ -5,6 +5,7 @@ local sizey
 local sizez
 local tran
 local fov
+local onspace = false
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
@@ -85,7 +86,7 @@ do
     })
     
 	Tabs.Main:AddSection("Stamina")
-    local DeleteStamina = Tabs.Main:AddToggle("DeleteStamina", {Title = "Delete Stamina", Default = false })
+    local DeleteStamina = Tabs.Main:AddToggle("DeleteStamina", {Title = "inf Stamina", Default = false })
 
 	Tabs.Main:AddSection("etc")
     local fovTabs = Tabs.Main:AddToggle("fovTabs", {Title = "Change field of view", Default = false })
@@ -122,15 +123,16 @@ Fluent:Notify({
 })
 SaveManager:LoadAutoloadConfig()
 
-local humanoid = game:GetService("Players").LocalPlayer.Character.Humanoid
 local uis = game:GetService("UserInputService")
 local isshift = false
 uis.InputBegan:Connect(function(input, chat)
 	if not chat then
 		if input.KeyCode == Enum.KeyCode.Space then
-			if humanoid then
-				if humanoid.FloorMaterial ~= Enum.Material.Air then
-					humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+			local humanoid = game:GetService("Players").LocalPlayer.Character.Humanoid
+			if humanoid.WalkSpeed ~= 0 then
+				local isball = humanoid.Parent.Ball:FindFirstChild("Texture")
+				if not isball then
+					onspace = true
 				end
 			end
 		end
@@ -140,21 +142,30 @@ uis.InputBegan:Connect(function(input, chat)
 	end
 end)
 uis.InputEnded:Connect(function(input)
+	if input.KeyCode == Enum.KeyCode.Space then
+		onspace = false
+	end
 	if input.KeyCode == Enum.KeyCode.LeftShift then
 		isshift = false
 	end
 end)
 
 game:GetService("RunService").RenderStepped:Connect(function()
+	local humanoid = game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid")
 	local hitbox = game:GetService("Players").LocalPlayer.Character:WaitForChild("Hitbox")
 	local tacklehitbox = game:GetService("Players").LocalPlayer.Character:WaitForChild("TackleHitbox")
+	if onspace then
+		if humanoid.FloorMaterial ~= Enum.Material.Air then
+			humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+		end
+	end
 	if Options.DeleteStamina.Value then
 		if isshift then
-			humanoid.WalkSpeed = 27
-			game:GetService("Players").LocalPlayer.PlayerGui.GameGui.MatchHUD.EnergyBars.Stamina.Visible = false
+			if humanoid.WalkSpeed ~= 0 then
+				humanoid.WalkSpeed = 27
+			end
 		end
-	else
-		game:GetService("Players").LocalPlayer.PlayerGui.GameGui.MatchHUD.EnergyBars.Stamina.Visible = true
+		game:GetService("Players").LocalPlayer.PlayerGui.GameGui.MatchHUD.EnergyBars.Stamina.ProgressBar.Size = UDim2.new(1, 0, 1, 0)
 	end
 	if Options.ChangeHitbox.Value then
 		hitbox.Size = Vector3.new(sizex, sizey, sizez)
