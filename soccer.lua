@@ -128,13 +128,7 @@ local isshift = false
 uis.InputBegan:Connect(function(input, chat)
 	if not chat then
 		if input.KeyCode == Enum.KeyCode.Space then
-			local humanoid = game:GetService("Players").LocalPlayer.Character.Humanoid
-			if humanoid.WalkSpeed ~= 0 then
-				local isball = humanoid.Parent.Ball:FindFirstChild("Texture")
-				if not isball then
-					onspace = true
-				end
-			end
+			onspace = true
 		end
 		if input.KeyCode == Enum.KeyCode.LeftShift then
 			isshift = true
@@ -156,7 +150,12 @@ game:GetService("RunService").RenderStepped:Connect(function()
 	local tacklehitbox = game:GetService("Players").LocalPlayer.Character:WaitForChild("TackleHitbox")
 	if onspace then
 		if humanoid.FloorMaterial ~= Enum.Material.Air then
-			humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+			if humanoid.WalkSpeed ~= 0 then
+				local isball = humanoid.Parent.Ball:FindFirstChild("Texture")
+				if not isball then
+					humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+				end
+			end
 		end
 	end
 	if Options.DeleteStamina.Value then
