@@ -5,6 +5,7 @@ local sizey
 local sizez
 local tran
 local fov
+local runspd
 local onspace = false
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
@@ -87,6 +88,17 @@ do
     
 	Tabs.Main:AddSection("Stamina")
     local DeleteStamina = Tabs.Main:AddToggle("DeleteStamina", {Title = "inf Stamina", Default = false })
+	local changespeed = Tabs.Main:AddToggle("changespeed", {Title = "Change Run Speed", Default = false })
+	local runspeed = Tabs.Main:AddSlider("runspeed", {
+        Title = "Run Speed :",
+        Default = 2,
+        Min = 27,
+        Max = 40,
+        Rounding = 0,
+        Callback = function(Value)
+			runspd = Value
+        end
+    })
 
 	Tabs.Main:AddSection("etc")
     local fovTabs = Tabs.Main:AddToggle("fovTabs", {Title = "Change field of view", Default = false })
@@ -161,7 +173,11 @@ game:GetService("RunService").RenderStepped:Connect(function()
 	if Options.DeleteStamina.Value then
 		if isshift then
 			if humanoid.WalkSpeed ~= 0 then
-				humanoid.WalkSpeed = 27
+				if Options.changespeed.Value then
+					humanoid.WalkSpeed = runspd
+				else
+					humanoid.WalkSpeed = 27
+				end
 			end
 		end
 		game:GetService("Players").LocalPlayer.PlayerGui.GameGui.MatchHUD.EnergyBars.Stamina.ProgressBar.Size = UDim2.new(1, 0, 1, 0)
