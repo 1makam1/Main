@@ -88,7 +88,6 @@ do
     
 	Tabs.Main:AddSection("Stamina")
     local DeleteStamina = Tabs.Main:AddToggle("DeleteStamina", {Title = "inf Stamina", Default = false })
-	local changespeed = Tabs.Main:AddToggle("changespeed", {Title = "Change Run Speed", Default = false })
 	local runspeed = Tabs.Main:AddSlider("runspeed", {
         Title = "Run Speed :",
         Default = 2,
@@ -173,11 +172,7 @@ game:GetService("RunService").RenderStepped:Connect(function()
 	if Options.DeleteStamina.Value then
 		if isshift then
 			if humanoid.WalkSpeed ~= 0 then
-				if Options.changespeed.Value then
-					humanoid.WalkSpeed = runspd
-				else
-					humanoid.WalkSpeed = 27
-				end
+				humanoid.WalkSpeed = runspd
 			end
 		end
 		game:GetService("Players").LocalPlayer.PlayerGui.GameGui.MatchHUD.EnergyBars.Stamina.ProgressBar.Size = UDim2.new(1, 0, 1, 0)
