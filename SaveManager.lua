@@ -26,7 +26,7 @@ local SaveManager = {} do
 		},
 		Dropdown = {
 			Save = function(idx, object)
-				return { type = "Dropdown", idx = idx, value = object.Value, mutli = object.Multi }
+				return { type = "Dropdown", idx = idx, value = object, mutli = object.Multi }
 			end,
 			Load = function(idx, data)
 				if SaveManager.Options[idx] then 
@@ -90,7 +90,7 @@ local SaveManager = {} do
 		}
 
 		for idx, option in next, SaveManager.Options do
-			--if not self.Parser[option.Type] then continue end
+			if not self.Parser[option.Type] then continue end
 			if self.Ignore[idx] then continue end
 
 			table.insert(data.objects, self.Parser[option.Type].Save(idx, option))
