@@ -107,7 +107,7 @@ local InterfaceManager = {} do
 			Settings.MenuKeybind = InterfaceManager.MenuKeybind.Value
             InterfaceManager:SaveSettings()
 		end)
-		Library.MinimizeKeybind = MenuKeybind
+		Library.MinimizeKeybind = InterfaceManager.MenuKeybind
     end
 end
 
