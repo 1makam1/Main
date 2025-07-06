@@ -73,8 +73,8 @@ local function Attack()
 end
 ---[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[--UI--]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/InterfaceManager.lua"))()
 
 if _G.Window then _G.Window:Destroy() end
 _G.Window = Fluent:CreateWindow({
@@ -84,7 +84,6 @@ _G.Window = Fluent:CreateWindow({
     Size = UDim2.fromOffset(580, 460),
     Acrylic = false,
     Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.F
 })
 local Tabs = {
     Main = _G.Window:AddTab({ Title = "V4", Icon = "shield" }),
@@ -198,7 +197,6 @@ do
     local TeamsSection = Tabs.Other:AddSection("Teams")
     TeamsSection:AddButton({Title = "Join Marines",Callback = function() game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("SetTeam", "Marines") end})
     TeamsSection:AddButton({Title = "Join Pirates",Callback = function() game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("SetTeam", "Pirates") end})
-    
 end
 _G.Window:SelectTab(1)
 InterfaceManager:SetLibrary(Fluent)
@@ -211,6 +209,55 @@ SaveManager:SetIgnoreIndexes({})
 SaveManager:SetFolder("ALUMILAI/Autov4")
 SaveManager:Load("V4SctiptSettings")
 ---[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+if _G.Button then _G.Button:Destroy() end
+_G.Button = Instance.new("ScreenGui", game:GetService("CoreGui"))
+local b = Instance.new("ImageButton", _G.Button)
+b.Image = "rbxassetid://121679659223542"
+b.Size = UDim2.new(.05,0,.1,0)
+b.Position = UDim2.new(.1,0,.1,0)
+local uarc = Instance.new("UIAspectRatioConstraint", b)
+local coner = Instance.new("UICorner", b)
+
+local uis = game:GetService("UserInputService")
+local dargging
+local draginput
+local dragstart
+local startpos
+local function update(input)
+	local delta = input.Position - dragstart
+	b.Position = UDim2.new(startpos.X.Scale, startpos.X.Offset + delta.X, startpos.Y.Scale, startpos.Y.Offset + delta.Y)
+end
+b.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragstart = input.Position
+		startpos = b.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+b.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touce then
+		draginput = input
+	end
+end)
+uis.InputChanged:Connect(function(input)
+	if input == draginput and dragging then
+		if b.Visible then
+			update(input)
+		end
+	end
+end)
+b.Activated:Connect(function()
+    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode[InterfaceManager.MenuKeybind.Value], false, game)
+    game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode[InterfaceManager.MenuKeybind.Value], false, game)
+end)
+---[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
 
 
 if _G.MainLoop then
