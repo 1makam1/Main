@@ -110,7 +110,7 @@ local InterfaceManager = {} do
 		Library.MinimizeKeybind = MenuKeybind
     end
 
-    local InterfaceManager.GetKeyOpen()
+    function InterfaceManager.GetKeyOpen()
         return MenuKeybind.Value
     end
 end
