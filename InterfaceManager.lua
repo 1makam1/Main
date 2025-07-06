@@ -103,8 +103,8 @@ local InterfaceManager = {} do
 		})
 	
 		InterfaceManager.MenuKeybind = section:AddKeybind("MenuKeybind", { Title = "Minimize Bind", Default = Settings.MenuKeybind })
-		MenuKeybind:OnChanged(function()
-			Settings.MenuKeybind = MenuKeybind.Value
+		InterfaceManager.MenuKeybind:OnChanged(function()
+			Settings.MenuKeybind = InterfaceManager.MenuKeybind.Value
             InterfaceManager:SaveSettings()
 		end)
 		Library.MinimizeKeybind = MenuKeybind
