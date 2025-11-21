@@ -429,12 +429,6 @@ AutoChest.SitHandler = task.spawn(function()
     Player.CharacterAdded:Connect(function(char) char:WaitForChild("Humanoid"):GetPropertyChangedSignal("Sit"):Connect(onSit) end)
 end)
 
-_G.AutoChestEnv = true
+if _G.AutoChestEnv then print("clear") _G.AutoChestEnv:Clear() end
 
-while task.wait(0.1) do
-    if _G.AutoChestEnv == false then
-        AutoChest:Clear()
-
-        break
-    end
-end
+_G.AutoChestEnv = AutoChest
