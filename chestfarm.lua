@@ -129,7 +129,7 @@ function gui()
     Frame.Position = UDim2.new(0.0451086722, 0, 0.165085033, 0)
     Frame.Size = UDim2.new(0, 360, 0, 144)
 
-    UICorner.CornerRadius = UDim.new(0.100000001, 0)
+    UICorner.CornerRadius = UDim.new(0, 12)
     UICorner.Parent = Frame
 
     toggle.Name = "toggle"
