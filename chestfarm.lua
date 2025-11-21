@@ -1,302 +1,280 @@
-------------------------------------------------------------------------------------------variable---------------------------------------------------------------------------------------------
-local chestcf = {}
-local islandcf = {}
-local islandnm = {}
-local islandnumber = 1
-local cislandnumber = false
-local onisland = false
-local maxchest = 0
-local checkchest = false
-local cstage = 1
-local maxisland = 0
-local csplus = false
-local collecting = false
-local sea = nil
-local ongostship = false
-local connection
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local StarterGui = game:GetService("StarterGui")
-local player = Players.LocalPlayer
------------------------------------------------------------------------------------part-chest/stage-plus---------------------------------------------------------------------------------------------------
-local iscspart = false
-for i,v in ipairs(game.workspace:GetDescendants()) do
-	if v.Name == "part chest" then
-		cspart = v
-		iscspart = true
-	end
-end
-if not iscspart then
-	cspart = Instance.new("Part")
-	cspart.Parent = game.workspace
-	cspart.Name = "part chest"
-	cspart.Anchored = true
-	cspart.Transparency = 1
-	cspart.CanCollide = false
-end
-cspart.Touched:Connect(function(part)
-	local humanoid = part.Parent:FindFirstChild("Humanoid")
-	if humanoid then
-		if collecting and onisland and checkchest then
-			csplus = true
-		end
-	end
-end)
---------------------------------------------------------------------------------------part-island------------------------------------------------------------------------------------------------
-local ispartis = false
-for i,v in ipairs(game.workspace:GetDescendants()) do
-	if v.Name == "part island" then
-		partis = v
-		ispartis = true
-	end
-end
-if not ispartis then
-	partis = Instance.new("Part")
-	partis.Parent = game.workspace
-	partis.Name = "part island"
-	partis.Anchored = true
-	partis.Transparency = 1
-	partis.CanCollide = false
-end
-partis.Touched:Connect(function(part)
-	local humanoid = part.Parent:FindFirstChild("Humanoid")
-	if humanoid then
-		onisland = true
-	end
-end)
-------------------------------------------------------------------------------------------TP------------------------------------------------------------------------------------------------------
-function TP(Position)
-	local distance = (Position.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
-	speed = 200
-	game:GetService("TweenService"):Create(
-	game.Players.LocalPlayer.Character.HumanoidRootPart, 
-	TweenInfo.new(distance/speed, Enum.EasingStyle.Linear),
-	{CFrame = Position}
-	):Play()
-end
------------------------------------------------------------------------------------insert-island/sea-----------------------------------------------------------------------------------------------
-for i,v in ipairs(game.workspace.Map:GetChildren()) do
-	if v.Name == "Fishmen" or v.Name == "MiniSky" or v.Name == "RaidMap" or v.Name == "Temple of Time" or v.Name == "WaterBase-Plane" or v.Name == "GhostShip" or v.Name == "IndraIsland" or v.Name == "CandyCane" or v.Name == "FortBuilderPotentialSurfaces" or v.Name == "FortBuilderPlacedSurfaces" or v.Name == "StagePart" then
-		if v.Name == "GhostShip" then
-			sea = 2
-		end
-	else
-		table.insert(islandcf, v.WorldPivot)
-		table.insert(islandnm, v.Name)
-		maxisland = maxisland + 1
-		if v.Name == "Boat Castle" then
-			sea = 3
-		end
-	end
-end
-----------------------------------------------------------------------------------anti-afk----------------------------------------------------------------------------------------------------------
-local VirtualUser = game:GetService('VirtualUser')
-game:GetService('Players').LocalPlayer.Idled:Connect(function()
-	VirtualUser:CaptureController()
-	VirtualUser:ClickButton2(Vector2.new())
-end)
----------------------------------------------------------------------------------check-island-----------------------------------------------------------------------------------------------------
-function checkonisland()
-	if collecting == true then
-		if cislandnumber == true then
-			islandnumber = islandnumber + 1
-			checkchest = false
-			--print("change island")
-			if islandnumber > maxisland then
-				islandnumber = 1
-				checkchest = false
-				--print("change island")
-			end
-			onisland = false
-			cislandnumber = false
-			--print("island",islandnumber)
-		end
-		if partis.CFrame ~= islandcf[islandnumber] then
-			partis.CFrame = islandcf[islandnumber]
-			--print("change part location")
-		end
-		if onisland == true then
-			e.Text = "Island : " .. tostring(islandnm[islandnumber])
-		elseif sea == 2 and islandnm[islandnumber] == "GhostShipInterior" and ongostship == false then
-			game.workspace.Map.GhostShip.Teleport.CanTouch = true
-			game.workspace.Map.GhostShip.Teleport.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-			wait(0.1)
-			game.workspace.Map.GhostShip.Teleport.CFrame = CFrame.new(-6496.89795, 89.034996, -116.50946, 0.819155693, 0, -0.573571265, 0, -1.00000024, -0, -0.573571265, 0, -0.819156051)
-			wait(2)
-			game.workspace.Map.GhostShip.Teleport.CanTouch = false
-			TP(partis.CFrame)
-			wait(2)
-			ongostship = true
-		elseif sea == 2 and ongostship == true then
-			game.workspace.Map.GhostShipInterior.Teleport.CanTouch = true
-			game.workspace.Map.GhostShipInterior.Teleport.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-			wait(0.1)
-			game.workspace.Map.GhostShipInterior.Teleport.CFrame = CFrame.new(920.477539, 154.901001, 32838.9648, 0, 0, -1, 0, 1, 0, 1, 0, 0)
-			wait(2)
-			game.workspace.Map.GhostShipInterior.Teleport.CanTouch = false
-			ongostship = false
-		else
-			csplus = false
-			TP(partis.CFrame)
-		end
-	end
-end
--------------------------------------------------------------------------------------collect-chest------------------------------------------------------------------------------------------------
-function collectchest()
-	if onisland then
-		if not checkchest then
-			for i,v in ipairs(game.workspace.Map[islandnm[islandnumber]]:GetDescendants())do
-				if v.Name == "Chest1" or v.Name == "Chest2" or v.Name == "Chest3" then
-					table.insert(chestcf, v.CFrame)
-					--print("insertchestcf")
-					maxchest = maxchest + 1
-				end
-			end
-			checkchest = true
-			g.Text = "Collect " .. cstage - 1 .. " / " .. maxchest
-			--print("maxchest", maxchest)
-			--print("checked chest")
-		end
+local AutoChest = {}
 
-		if csplus == true then
-			cstage = cstage + 1
-			if cstage >= maxchest + 1 then
-				for k in pairs(chestcf) do
-					chestcf[k] = nil
-					--print("remove chestcf")
-				end
-				e.Text = "Island : " .. tostring(islandnm[islandnumber]) .. " (done)"
-				g.Text = "Collect " .. cstage - 1 .. " / " .. maxchest .. " (done)"
-				cislandnumber = true
-				cstage = 1
-				maxchest = 0
-				checkchest = false
-				--print("done island")
-			else
-				TP(chestcf[cstage])
-				g.Text = "Collect " .. cstage - 1 .. " / " .. maxchest
-				--print(cstage)
-			end
-			wait(0.5)
-			csplus = false
-		else
-			cspart.CFrame = chestcf[cstage]
-			TP(chestcf[cstage])
-		end
-	end
+local Players = game:GetService("Players")
+local Player = Players.LocalPlayer
+local sea
+
+if game.PlaceId == 4442272183 then
+    sea = 2
 end
----------------------------------------------------------------------------------------------noclip---------------------------------------------------------------------------------------------
-function toggleNoclip()
-	if collecting then
-		if connection then
-			for _, part in pairs(player.Character:GetDescendants()) do
-				if part:IsA("BasePart") then
-					part.CanCollide = false
-				end
-			end
-		else
-			connection = RunService.Stepped:Connect(function()
-				for _, part in pairs(player.Character:GetDescendants()) do
-					if part:IsA("BasePart") then
-						part.CanCollide = false
-					end
-				end
-			end)
-		end
-	else 
-		if connection then
-			connection:Disconnect()
-		end
-		for _, part in pairs(player.Character:GetDescendants()) do
-			if part:IsA("BasePart") then
-				part.CanCollide = true
-			end
-		end
-	end
+
+if not getgenv().ChestLocation then getgenv().ChestLocation = {} end
+
+local Islands = {
+    [2] = {
+        {Name = "Dressrosa",        Position = Vector3.new(-381.31109619140625, 373.7752990722656, 712.6630859375)},
+        {Name = "Mini2",            Position = Vector3.new(-5162.13720703125, 259.2460021972656, 2390.263671875)},
+        {Name = "GraveIsland",      Position = Vector3.new(-5620.77587890625, 492.51043701171875, -778.916015625)},
+        {Name = "GhostShipInterior",Position = Vector3.new(-6496.89794921875, 89.03500366210938, -116.50900268554688)},
+        {Name = "GreenBit",         Position = Vector3.new(-2413.85693359375, 199.2963409423828, -3343.087158203125)},
+        {Name = "CircleIsland",     Position = Vector3.new(-5688.5244140625, 161.68051147460938, -5059.83349609375)},
+        {Name = "ForgottenIsland",  Position = Vector3.new(-3121.372802734375, 339.6866149902344, -10349.1767578125)},
+        {Name = "IceCastle",        Position = Vector3.new(5598.82958984375, 362.0080261230469, -6688.6298828125)},
+        {Name = "SnowMountain",     Position = Vector3.new(838.9915161132812, 492.3343505859375, -5379.8388671875)},
+        {Name = "DarkbeardArena",   Position = Vector3.new(3664.618896484375, 137.927734375, -3665.089111328125)},
+        {Name = "Mini1",            Position = Vector3.new(4791.00146484375, 253.58216857910156, 2851.848388671875)},
+    }
+}
+
+function AutoChest:Fly(target)
+    if self.FlyThread then self.FlyThread = task.cancel(self.FlyThread) end
+    
+    if not self.FlyVelocity then
+        self.FlyVelocity = Instance.new("BodyVelocity")
+    end
+
+    if target then
+        self.FlyThread = task.spawn(function()
+            local startPos = Vector3.new()
+
+            while task.wait() do
+                local hum = Player.Character:FindFirstChildOfClass("Humanoid")
+
+                if not hum or hum.Health <= 0 then
+                    continue
+                end
+
+                pcall(function()
+                    self.FlyVelocity.Parent = Player.Character.UpperTorso
+
+                    local hrp = Player.Character.HumanoidRootPart
+
+                    if (startPos - hrp.Position).Magnitude > 100 then
+                        startPos = hrp.Position
+                    end
+
+                    local des = typeof(target) == "Instance" and target:GetPivot().Position or target
+                    local dir = (des - startPos).Unit
+
+                    local newPos = startPos + dir * 3
+                    hrp.Parent:PivotTo(CFrame.new(newPos))
+                    startPos = newPos
+                end)
+            end
+        end)
+
+    else
+        self.FlyVelocity.Parent = nil
+    end
 end
+
+function InsertIslandChestLoaction(island)
+    if not getgenv().ChestLocation[island] then
+        getgenv().ChestLocation[island] = {}
+
+        for _, v in workspace:WaitForChild("Map")[island]:GetDescendants() do
+            if string.find(v.Name, "Chest") and v:IsA("BasePart") then
+                table.insert(getgenv().ChestLocation[island], v)
+            end
+        end
+    end
+end
+
+function IsChestExist(chestLoaction)
+    for _, v in workspace:WaitForChild("ChestModels"):GetChildren() do
+        if (v:GetPivot().Position - chestLoaction.Position).Magnitude < 10 then
+            return true
+        end
+    end
+end
+
 -----------------------------------------------------------------------------------------GUI----------------------------------------------------------------------------------------------------
 function gui()
-	for i,v in ipairs(game:GetService("Players").LocalPlayer.PlayerGui:GetChildren())do
+	for i,v in game:GetService("CoreGui"):GetChildren() do
 		if v.Name == "Chestfarmgui" then
 			v:Destroy()
-			wait(0.5)
 		end
 	end
-	s = Instance.new("ScreenGui")
-	s.Name = "Chestfarmgui"
-	s.Parent = game:GetService("Players").LocalPlayer.PlayerGui
-	f = Instance.new("Frame")
-	f.Parent = s
-	f.Size = UDim2.new(0, 300, 0, 200)
-	f.Position = UDim2.new(0, 6, 0, 40)
-	f.BackgroundColor3 = Color3.fromRGB(42, 42, 42)
-	f.Active = true
-	-- f.Draggable = true
-	-- f.Selectable = true
-	local corner = Instance.new("UICorner")
-	corner.Parent = f
-	corner.CornerRadius = UDim.new(0, 10)
-	b = Instance.new("TextButton")
-	b.Parent = f
-	b.BackgroundColor3 = Color3.fromRGB(168, 168, 19)
-	b.BorderColor3 = Color3.fromRGB(225, 225, 225)
-	b.Size = UDim2.new(0, 300, 0, 30)
-	b.Position = UDim2.new(0, 0, 0, 60)
-	b.Text = "toggle on/off"
-	b.TextSize = 15
-	b.TextColor3 = Color3.fromRGB(255, 255, 255)
-	local c = Instance.new("TextLabel")
-	c.Parent = f
-	c.BackgroundTransparency = 1
-	c.Size = UDim2.new(0, 300, 0, 30)
-	c.Text = "Chest collecting"
-	c.TextColor3 = Color3.fromRGB(255, 255, 255)
-	c.TextSize = 20
-	local d = Instance.new("TextLabel")
-	d.Parent = f
-	d.BackgroundTransparency = 1
-	d.Position = UDim2.new(0, 0, 0, 33)
-	d.Size = UDim2.new(0, 300, 0, 20)
-	d.Text = "by น้องหมูสุดหล่อเท่ 🐷"
-	d.TextColor3 = Color3.fromRGB(255, 255, 255)
-	d.TextSize = 15
-	e = Instance.new("TextLabel")
-	e.Parent = f
-	e.BackgroundTransparency = 1
-	e.Position = UDim2.new(0, 0, 0, 140)
-	e.Size = UDim2.new(0, 300, 0, 20)
-	e.Text = "Island : " .. "nil"
-	e.TextColor3 = Color3.fromRGB(255, 255, 255)
-	e.TextSize = 15
-	g = Instance.new("TextLabel")
-	g.Parent = f
-	g.BackgroundTransparency = 1
-	g.Position = UDim2.new(0, 0, 0, 170)
-	g.Size = UDim2.new(0, 300, 0, 20)
-	g.Text = "Collect : " .. "nil"
-	g.TextColor3 = Color3.fromRGB(255, 255, 255)
-	g.TextSize = 15
-	h = Instance.new("TextLabel")
-	h.Parent = f
-	h.BackgroundTransparency = 1
-	h.Position = UDim2.new(0, 0, 0, 100)
-	h.Size = UDim2.new(0, 300, 0, 20)
-	h.Text = "Status : 🔴"
-	h.TextColor3 = Color3.fromRGB(255, 255, 255)
-	h.TextSize = 20
-	x = Instance.new("TextButton")
-	x.Parent = f
-	x.BackgroundColor3 = Color3.fromRGB(165, 0, 0)
-	x.Size = UDim2.new(0, 30, 0, 30)
-	x.Position = UDim2.new(0, 270, 0, 0)
-	x.Text = "X"
-	x.TextSize = 15
-	x.TextColor3 = Color3.fromRGB(0, 0, 0)
-	local corner2 = Instance.new("UICorner")
-	corner2.Parent = x
-	corner2.CornerRadius = UDim.new(0, 5)
+
+	local ScreenGui = Instance.new("ScreenGui")
+    local Frame = Instance.new("Frame")
+    local UICorner = Instance.new("UICorner")
+    local toggle = Instance.new("ImageButton")
+    local UIGradient = Instance.new("UIGradient")
+    local UISizeConstraint = Instance.new("UISizeConstraint")
+    local header = Instance.new("TextLabel")
+    local UIGradient_2 = Instance.new("UIGradient")
+    local UISizeConstraint_2 = Instance.new("UISizeConstraint")
+    local credit = Instance.new("TextLabel")
+    local version = Instance.new("TextLabel")
+    local UIScale = Instance.new("UIScale")
+    local Menu = Instance.new("Frame")
+    local UIListLayout = Instance.new("UIListLayout")
+    local UIPadding = Instance.new("UIPadding")
+    local minimize = Instance.new("TextButton")
+    local UICorner_2 = Instance.new("UICorner")
+    local Close = Instance.new("TextButton")
+    local UICorner_3 = Instance.new("UICorner")
+    local ImageLabel = Instance.new("ImageLabel")
+
+    ScreenGui.Name = "Chestfarmgui"
+    ScreenGui.Parent = game:GetService("CoreGui")
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+    Frame.Parent = ScreenGui
+    Frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Frame.BorderSizePixel = 0
+    Frame.ClipsDescendants = true
+    Frame.Position = UDim2.new(0.0451086722, 0, 0.165085033, 0)
+    Frame.Size = UDim2.new(0, 360, 0, 144)
+
+    UICorner.CornerRadius = UDim.new(0.100000001, 0)
+    UICorner.Parent = Frame
+
+    toggle.Name = "toggle"
+    toggle.Parent = Frame
+    toggle.AnchorPoint = Vector2.new(1, 0.5)
+    toggle.BackgroundColor3 = Color3.fromRGB(255, 247, 0)
+    toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    toggle.BorderSizePixel = 0
+    toggle.Position = UDim2.new(1, 0, 0, 70)
+    toggle.Size = UDim2.new(0, 360, 0, 40)
+    toggle.Image = "rbxassetid://119819533222441"
+    toggle.ImageColor3 = Color3.fromRGB(17, 255, 0)
+    toggle.ScaleType = Enum.ScaleType.Fit
+
+    UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(0.93, Color3.fromRGB(147, 147, 147)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(117, 117, 117))}
+    UIGradient.Rotation = 90
+    UIGradient.Parent = toggle
+
+    UISizeConstraint.Parent = toggle
+    UISizeConstraint.MaxSize = Vector2.new(360, 40)
+    UISizeConstraint.MinSize = Vector2.new(360, 40)
+
+    header.Name = "header"
+    header.Parent = Frame
+    header.AnchorPoint = Vector2.new(1, 0)
+    header.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    header.BackgroundTransparency = 1.000
+    header.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    header.BorderSizePixel = 0
+    header.Position = UDim2.new(0.983333349, 0, 0, 4)
+    header.Size = UDim2.new(0, 350, 0, 40)
+    header.Font = Enum.Font.GothamBold
+    header.Text = "AUTO CHEST"
+    header.TextColor3 = Color3.fromRGB(255, 255, 255)
+    header.TextScaled = true
+    header.TextSize = 14.000
+    header.TextWrapped = true
+
+    UIGradient_2.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(216, 216, 216)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))}
+    UIGradient_2.Parent = header
+
+    UISizeConstraint_2.Parent = header
+    UISizeConstraint_2.MaxSize = Vector2.new(350, 40)
+    UISizeConstraint_2.MinSize = Vector2.new(350, 40)
+
+    credit.Name = "credit"
+    credit.Parent = Frame
+    credit.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    credit.BackgroundTransparency = 1.000
+    credit.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    credit.BorderSizePixel = 0
+    credit.Position = UDim2.new(0, 5, 0, 121)
+    credit.Size = UDim2.new(0, 162, 0, 21)
+    credit.Font = Enum.Font.SourceSansBold
+    credit.Text = "by ALUMILAI"
+    credit.TextColor3 = Color3.fromRGB(221, 221, 221)
+    credit.TextScaled = true
+    credit.TextSize = 14.000
+    credit.TextWrapped = true
+    credit.TextXAlignment = Enum.TextXAlignment.Left
+
+    version.Name = "version"
+    version.Parent = Frame
+    version.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    version.BackgroundTransparency = 1.000
+    version.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    version.BorderSizePixel = 0
+    version.Position = UDim2.new(0, 191, 0, 121)
+    version.Size = UDim2.new(0, 162, 0, 21)
+    version.Font = Enum.Font.SourceSansBold
+    version.Text = "New version"
+    version.TextColor3 = Color3.fromRGB(221, 221, 221)
+    version.TextScaled = true
+    version.TextSize = 14.000
+    version.TextWrapped = true
+    version.TextXAlignment = Enum.TextXAlignment.Right
+
+    UIScale.Parent = Frame
+
+    Menu.Name = "Menu"
+    Menu.Parent = Frame
+    Menu.AnchorPoint = Vector2.new(1, 0)
+    Menu.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Menu.BackgroundTransparency = 1.000
+    Menu.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Menu.BorderSizePixel = 0
+    Menu.Position = UDim2.new(1, 0, 0, 0)
+    Menu.Size = UDim2.new(0.277777791, 0, 0.138888896, 0)
+
+    UIListLayout.Parent = Menu
+    UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+    UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIListLayout.Padding = UDim.new(0, 5)
+
+    UIPadding.Parent = Menu
+    UIPadding.PaddingRight = UDim.new(0, 5)
+    UIPadding.PaddingTop = UDim.new(0, 5)
+
+    minimize.Name = "minimize"
+    minimize.Parent = Menu
+    minimize.Active = false
+    minimize.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+    minimize.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    minimize.BorderSizePixel = 0
+    minimize.Position = UDim2.new(0.938888907, -10, 0, 5)
+    minimize.Selectable = false
+    minimize.Size = UDim2.new(0, 15, 0, 15)
+    minimize.Text = ""
+
+    UICorner_2.CornerRadius = UDim.new(1, 0)
+    UICorner_2.Parent = minimize
+
+    Close.Name = "Close"
+    Close.Parent = Menu
+    Close.Active = false
+    Close.BackgroundColor3 = Color3.fromRGB(255, 0, 4)
+    Close.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Close.BorderSizePixel = 0
+    Close.LayoutOrder = 1
+    Close.Position = UDim2.new(0.938888907, -10, 0, 5)
+    Close.Selectable = false
+    Close.Size = UDim2.new(0, 15, 0, 15)
+    Close.Text = ""
+
+    UICorner_3.CornerRadius = UDim.new(1, 0)
+    UICorner_3.Parent = Close
+
+    ImageLabel.Parent = Frame
+    ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    ImageLabel.BackgroundTransparency = 1.000
+    ImageLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    ImageLabel.BorderSizePixel = 0
+    ImageLabel.Position = UDim2.new(0.438888878, 0, 0, 96)
+    ImageLabel.Size = UDim2.new(0, 40, 0, 40)
+    ImageLabel.Image = "rbxassetid://6947202399"
+
+    if game:GetService("UserInputService").TouchEnabled then
+        UIScale.Scale = 0.5
+    end
+
+    return ScreenGui, Frame, toggle, minimize, Close
 end
-gui()
+
+local ScreenGui, Frame, toggle, minimize, Close = gui()
 local uis = game:GetService("UserInputService")
 local dargging
 local draginput
@@ -304,13 +282,13 @@ local dragstart
 local startpos
 local function update(input)
 	local delta = input.Position - dragstart
-	f.Position = UDim2.new(startpos.X.Scale, startpos.X.Offset + delta.X, startpos.Y.Scale, startpos.Y.Offset + delta.Y)
+	Frame.Position = UDim2.new(startpos.X.Scale, startpos.X.Offset + delta.X, startpos.Y.Scale, startpos.Y.Offset + delta.Y)
 end
-f.InputBegan:Connect(function(input)
+Frame.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 		dragging = true
 		dragstart = input.Position
-		startpos = f.Position
+		startpos = Frame.Position
 
 		input.Changed:Connect(function()
 			if input.UserInputState == Enum.UserInputState.End then
@@ -319,88 +297,144 @@ f.InputBegan:Connect(function(input)
 		end)
 	end
 end)
-f.InputChanged:Connect(function(input)
+Frame.InputChanged:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touce then
 		draginput = input
 	end
 end)
 uis.InputChanged:Connect(function(input)
 	if input == draginput and dragging then
-		if f.Visible then
+		if Frame.Visible then
 			update(input)
 		end
 	end
 end)
 --------------------------------------------------------------------------------------close-gui-----------------------------------------------------------------------------------------------------
-x.Activated:Connect(function()
+Close.MouseButton1Click:Connect(function()
 	closeall = true
-	s:Destroy()
+	AutoChest:Clear()
 end)
 ------------------------------------------------------------------------------------toggle-on/off-----------------------------------------------------------------------------------------------------
-b.Activated:Connect(function()
-	if collecting == true then
-		collecting = false
-		toggleNoclip()
-		h.Text = "Status : 🔴"
-		--print(collecting)
-		csplus = false
-		if sea == 3 then
-			game.workspace.Map["Boat Castle"].MapTeleportB.Hitbox.CanTouch = true
-			game.workspace.Map["Boat Castle"].MapTeleportA.Hitbox.CanTouch = true
-		elseif sea == 2 then
-			game.workspace.Map.GhostShip.Teleport.CanTouch = true
-			game.workspace.Map.GhostShipInterior.Teleport.CanTouch = true
-			for i,v in ipairs(workspace:GetDescendants())do
-				if v:IsA("Seat") then
-				    v.CanTouch = true
-				end
-			end
-		end
-	else
-		collecting = true
-		toggleNoclip()
-		h.Text = "Status : 🟢"
-		--print(collecting)
-		csplus = false
-		if sea == 3 then
-			game.workspace.Map["Boat Castle"].MapTeleportB.Hitbox.CanTouch = false
-			game.workspace.Map["Boat Castle"].MapTeleportA.Hitbox.CanTouch = false
-		elseif sea == 2 then
-			game.workspace.Map.GhostShip.Teleport.CanTouch = false
-			game.workspace.Map.GhostShipInterior.Teleport.CanTouch = false
-			for i,v in ipairs(workspace:GetDescendants())do
-				if v:IsA("Seat") then
-				    v.CanTouch = false
-				end
-			end
-		end
-	end
-	pcall(function()
-		while collecting == true do
-			local hrp = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
-			bv = hrp:FindFirstChildWhichIsA("BodyVelocity")
-			if not bv then
-				bv = Instance.new("BodyVelocity")
-				bv.Parent = hrp
-				bv.MaxForce = Vector3.new(0,math.huge,0)
-				bv.Velocity = hrp.CFrame.Position * 0
-				wait(0.2)
-			end
+toggle.MouseButton1Click:Connect(function()
+    AutoChest.Status = not AutoChest.Status
 
-			if not closeall then
-				wait(0.1)
-				toggleNoclip()
-				checkonisland()
-				collectchest()
-				bv.MaxForce = Vector3.new(0,math.huge,0)
-			else
-				collecting = false
-				bv:Destroy()
-			end
-		end
-		if bv then
-			bv.MaxForce = Vector3.new(0,0,0)
-		end
-		TP(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
-	end)
+    toggle.ImageColor3 = AutoChest.Status and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
 end)
+
+local mini = false
+minimize.MouseButton1Click:Connect(function()
+    mini = not mini
+
+    if mini then
+        game:GetService("TweenService"):Create(Frame, TweenInfo.new(0.2), {Size = UDim2.new(0, 359, 0, 47)}):Play()
+    else
+        game:GetService("TweenService"):Create(Frame, TweenInfo.new(0.2), {Size = UDim2.new(0, 359, 0, 144)}):Play()
+    end
+end)
+
+function AutoChest:Clear()
+    if AutoChest.MainLoop then task.cancel(AutoChest.MainLoop) end
+    if AutoChest.FlyThread then task.cancel(AutoChest.FlyThread) end
+    if AutoChest.SitHandler then task.cancel(AutoChest.SitHandler) end
+    if self.FlyVelocity then self.FlyVelocity:Destroy() end
+    if ScreenGui then ScreenGui:Destroy() end
+end
+
+AutoChest.MainLoop = task.spawn(function()
+    AutoChest.Status = true
+    
+    while task.wait() do
+        for _, islandInfo in Islands[sea] do
+            local island = islandInfo.Name
+            local islandPos = islandInfo.Position
+
+            if not getgenv().ChestLocation[island] then
+                AutoChest:Fly(islandPos)
+
+                if island == "GhostShipInterior" then
+                    AutoChest:Fly()
+
+                    firetouchinterest(workspace.Map.GhostShip.Teleport, Player.Character.UpperTorso, 1)
+                    firetouchinterest(workspace.Map.GhostShip.Teleport, Player.Character.UpperTorso, 0)
+                else
+                    repeat
+                        task.wait(0.1)
+                        if not AutoChest.Status and AutoChest.FlyThread then
+                            AutoChest:Fly()
+                        elseif AutoChest.Status and not AutoChest.FlyThread then
+                            AutoChest:Fly(islandPos)
+                        end
+                    until (Player.Character.HumanoidRootPart.Position - islandPos).Magnitude < 10 and AutoChest.Status
+                end
+                InsertIslandChestLoaction(island)
+            end
+
+            if island == "GhostShipInterior" then
+                AutoChest:Fly()
+
+                firetouchinterest(workspace.Map.GhostShip.Teleport, Player.Character.UpperTorso, 1)
+                firetouchinterest(workspace.Map.GhostShip.Teleport, Player.Character.UpperTorso, 0)
+
+                task.wait(2)
+            end
+
+            for _, chestLoacte in getgenv().ChestLocation[island] do
+                local chestPos = chestLoacte.Position
+
+                AutoChest:Fly(chestPos)
+
+                repeat task.wait(0.1)
+                    if not AutoChest.Status and AutoChest.FlyThread then
+                        AutoChest:Fly()
+                    elseif AutoChest.Status and not AutoChest.FlyThread then
+                        AutoChest:Fly(chestPos)
+                    end
+                until (Player.Character.HumanoidRootPart.Position - chestPos).Magnitude < 1300 and AutoChest.Status
+
+                if IsChestExist(chestLoacte) then
+                    repeat task.wait(0.1)
+                        if not AutoChest.Status and AutoChest.FlyThread then
+                            AutoChest:Fly()
+                        elseif AutoChest.Status and not AutoChest.FlyThread then
+                            AutoChest:Fly(chestPos)
+                        end
+                    until (Player.Character.HumanoidRootPart.Position - chestPos).Magnitude < 20 and AutoChest.Status
+                
+                    firetouchinterest(chestLoacte, Player.Character.UpperTorso, 1)
+                    firetouchinterest(chestLoacte, Player.Character.UpperTorso, 0)
+                end
+            end
+
+            if island == "GhostShipInterior" then
+                firetouchinterest(workspace.Map.GhostShipInterior.Teleport, Player.Character.UpperTorso, 1)
+                firetouchinterest(workspace.Map.GhostShipInterior.Teleport, Player.Character.UpperTorso, 0)
+
+                task.wait(2)
+            end
+        end
+    end
+end)
+
+AutoChest.SitHandler = task.spawn(function()
+    local function onSit()
+        if Player.Character.Humanoid.Sit then
+            Player.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+        end
+    end
+
+    if Player.Character then
+        Player.Character:WaitForChild("Humanoid"):GetPropertyChangedSignal("Sit"):Connect(onSit)
+    end
+
+    Player.CharacterAdded:Connect(function(char) char:WaitForChild("Humanoid"):GetPropertyChangedSignal("Sit"):Connect(onSit) end)
+end)
+
+_G.AutoChestEnv = true
+
+while task.wait(0.1) do
+    if _G.AutoChestEnv == false then
+        AutoChest:Clear()
+
+        break
+    end
+end
