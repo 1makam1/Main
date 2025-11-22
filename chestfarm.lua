@@ -6,6 +6,8 @@ local sea
 
 if game.PlaceId == 4442272183 then
     sea = 2
+elseif game.PlaceId == 7449423635 then
+    sea = 3
 end
 
 if not getgenv().ChestLocation then getgenv().ChestLocation = {} end
@@ -23,6 +25,21 @@ local Islands = {
         {Name = "SnowMountain",     Position = Vector3.new(838.9915161132812, 492.3343505859375, -5379.8388671875)},
         {Name = "DarkbeardArena",   Position = Vector3.new(3664.618896484375, 137.927734375, -3665.089111328125)},
         {Name = "Mini1",            Position = Vector3.new(4791.00146484375, 253.58216857910156, 2851.848388671875)},
+    },
+
+    [3] = {
+        {Name = "Boat Castle",      Position = Vector3.new(-5492.04052734375, 385.2581481933594, -2828.29052734375)},
+        {Name = "Turtle",           Position = Vector3.new(-11985.8427734375, 757.1024169921875, -8613.4814453125)},
+        {Name = "Peanut Island",    Position = Vector3.new(-2294.951171875, 154.9969940185547, -10224.1396484375)},
+        {Name = "CakeLoaf",         Position = Vector3.new(-1963.7318115234375, 213.3590850830078, -11983.99609375)},
+        {Name = "Ice Cream Island", Position = Vector3.new(-976.6080322265625, 203.37655639648438, -11077.5078125)},
+        {Name = "ChocolateIsland",  Position = Vector3.new(129.6009063720703, 166.99302673339844, -12425.2392578125)},
+        {Name = "CandyCane",        Position = Vector3.new(-1020.7692260742188, 198.7365264892578, -14120.1328125)},
+        {Name = "Great Tree",       Position = Vector3.new(2421.17724609375, 606.0411376953125, -7495.4775390625)},
+        {Name = "Waterfall",        Position = Vector3.new(5270.4619140625, 1005.5440063476562, 379.91900634765625)},
+        {Name = "Port",             Position = Vector3.new(-351.6431579589844, 271.8161315917969, 5548.1591796875)},
+        {Name = "Haunted Castle",   Position = Vector3.new(-9481.134765625, 537.8112182617188, 5438.03759765625)},
+        {Name = "TikiOutpost",      Position = Vector3.new(-15892.3642578125, 265.3287048339844, 385.8984069824219)},
     }
 }
 
@@ -49,7 +66,7 @@ function AutoChest:Fly(target)
 
                     local hrp = Player.Character.HumanoidRootPart
 
-                    if (startPos - hrp.Position).Magnitude > 100 then
+                    if (startPos - hrp.Position).Magnitude > 500 then
                         startPos = hrp.Position
                     end
 
@@ -89,248 +106,250 @@ function IsChestExist(chestLoaction)
 end
 
 -----------------------------------------------------------------------------------------GUI----------------------------------------------------------------------------------------------------
-function gui()
-	for i,v in game:GetService("CoreGui"):GetChildren() do
-		if v.Name == "Chestfarmgui" then
-			v:Destroy()
-		end
-	end
+do
+    function gui()
+        for i,v in game:GetService("CoreGui"):GetChildren() do
+            if v.Name == "Chestfarmgui" then
+                v:Destroy()
+            end
+        end
 
-	local ScreenGui = Instance.new("ScreenGui")
-    local Frame = Instance.new("Frame")
-    local UICorner = Instance.new("UICorner")
-    local toggle = Instance.new("ImageButton")
-    local UIGradient = Instance.new("UIGradient")
-    local UISizeConstraint = Instance.new("UISizeConstraint")
-    local header = Instance.new("TextLabel")
-    local UIGradient_2 = Instance.new("UIGradient")
-    local UISizeConstraint_2 = Instance.new("UISizeConstraint")
-    local credit = Instance.new("TextLabel")
-    local version = Instance.new("TextLabel")
-    local UIScale = Instance.new("UIScale")
-    local Menu = Instance.new("Frame")
-    local UIListLayout = Instance.new("UIListLayout")
-    local UIPadding = Instance.new("UIPadding")
-    local minimize = Instance.new("TextButton")
-    local UICorner_2 = Instance.new("UICorner")
-    local Close = Instance.new("TextButton")
-    local UICorner_3 = Instance.new("UICorner")
-    local ImageLabel = Instance.new("ImageLabel")
+        local ScreenGui = Instance.new("ScreenGui")
+        local Frame = Instance.new("Frame")
+        local UICorner = Instance.new("UICorner")
+        local toggle = Instance.new("ImageButton")
+        local UIGradient = Instance.new("UIGradient")
+        local UISizeConstraint = Instance.new("UISizeConstraint")
+        local header = Instance.new("TextLabel")
+        local UIGradient_2 = Instance.new("UIGradient")
+        local UISizeConstraint_2 = Instance.new("UISizeConstraint")
+        local credit = Instance.new("TextLabel")
+        local version = Instance.new("TextLabel")
+        local UIScale = Instance.new("UIScale")
+        local Menu = Instance.new("Frame")
+        local UIListLayout = Instance.new("UIListLayout")
+        local UIPadding = Instance.new("UIPadding")
+        local minimize = Instance.new("TextButton")
+        local UICorner_2 = Instance.new("UICorner")
+        local Close = Instance.new("TextButton")
+        local UICorner_3 = Instance.new("UICorner")
+        local ImageLabel = Instance.new("ImageLabel")
 
-    ScreenGui.Name = "Chestfarmgui"
-    ScreenGui.Parent = game:GetService("CoreGui")
-    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        ScreenGui.Name = "Chestfarmgui"
+        ScreenGui.Parent = game:GetService("CoreGui")
+        ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-    Frame.Parent = ScreenGui
-    Frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Frame.BorderSizePixel = 0
-    Frame.ClipsDescendants = true
-    Frame.Position = UDim2.new(0.0451086722, 0, 0.165085033, 0)
-    Frame.Size = UDim2.new(0, 360, 0, 144)
+        Frame.Parent = ScreenGui
+        Frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        Frame.BorderSizePixel = 0
+        Frame.ClipsDescendants = true
+        Frame.Position = UDim2.new(0.0451086722, 0, 0.165085033, 0)
+        Frame.Size = UDim2.new(0, 360, 0, 144)
 
-    UICorner.CornerRadius = UDim.new(0, 12)
-    UICorner.Parent = Frame
+        UICorner.CornerRadius = UDim.new(0, 12)
+        UICorner.Parent = Frame
 
-    toggle.Name = "toggle"
-    toggle.Parent = Frame
-    toggle.AnchorPoint = Vector2.new(1, 0.5)
-    toggle.BackgroundColor3 = Color3.fromRGB(255, 247, 0)
-    toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    toggle.BorderSizePixel = 0
-    toggle.Position = UDim2.new(1, 0, 0, 70)
-    toggle.Size = UDim2.new(0, 360, 0, 40)
-    toggle.Image = "rbxassetid://119819533222441"
-    toggle.ImageColor3 = Color3.fromRGB(17, 255, 0)
-    toggle.ScaleType = Enum.ScaleType.Fit
+        toggle.Name = "toggle"
+        toggle.Parent = Frame
+        toggle.AnchorPoint = Vector2.new(1, 0.5)
+        toggle.BackgroundColor3 = Color3.fromRGB(255, 247, 0)
+        toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        toggle.BorderSizePixel = 0
+        toggle.Position = UDim2.new(1, 0, 0, 70)
+        toggle.Size = UDim2.new(0, 360, 0, 40)
+        toggle.Image = "rbxassetid://119819533222441"
+        toggle.ImageColor3 = Color3.fromRGB(17, 255, 0)
+        toggle.ScaleType = Enum.ScaleType.Fit
 
-    UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(0.93, Color3.fromRGB(147, 147, 147)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(117, 117, 117))}
-    UIGradient.Rotation = 90
-    UIGradient.Parent = toggle
+        UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(0.93, Color3.fromRGB(147, 147, 147)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(117, 117, 117))}
+        UIGradient.Rotation = 90
+        UIGradient.Parent = toggle
 
-    UISizeConstraint.Parent = toggle
-    UISizeConstraint.MaxSize = Vector2.new(360, 40)
-    UISizeConstraint.MinSize = Vector2.new(360, 40)
+        UISizeConstraint.Parent = toggle
+        UISizeConstraint.MaxSize = Vector2.new(360, 40)
+        UISizeConstraint.MinSize = Vector2.new(360, 40)
 
-    header.Name = "header"
-    header.Parent = Frame
-    header.AnchorPoint = Vector2.new(1, 0)
-    header.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    header.BackgroundTransparency = 1.000
-    header.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    header.BorderSizePixel = 0
-    header.Position = UDim2.new(0.983333349, 0, 0, 4)
-    header.Size = UDim2.new(0, 350, 0, 40)
-    header.Font = Enum.Font.GothamBold
-    header.Text = "AUTO CHEST"
-    header.TextColor3 = Color3.fromRGB(255, 255, 255)
-    header.TextScaled = true
-    header.TextSize = 14.000
-    header.TextWrapped = true
+        header.Name = "header"
+        header.Parent = Frame
+        header.AnchorPoint = Vector2.new(1, 0)
+        header.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        header.BackgroundTransparency = 1.000
+        header.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        header.BorderSizePixel = 0
+        header.Position = UDim2.new(0.983333349, 0, 0, 4)
+        header.Size = UDim2.new(0, 350, 0, 40)
+        header.Font = Enum.Font.GothamBold
+        header.Text = "AUTO CHEST"
+        header.TextColor3 = Color3.fromRGB(255, 255, 255)
+        header.TextScaled = true
+        header.TextSize = 14.000
+        header.TextWrapped = true
 
-    UIGradient_2.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(216, 216, 216)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))}
-    UIGradient_2.Parent = header
+        UIGradient_2.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(216, 216, 216)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))}
+        UIGradient_2.Parent = header
 
-    UISizeConstraint_2.Parent = header
-    UISizeConstraint_2.MaxSize = Vector2.new(350, 40)
-    UISizeConstraint_2.MinSize = Vector2.new(350, 40)
+        UISizeConstraint_2.Parent = header
+        UISizeConstraint_2.MaxSize = Vector2.new(350, 40)
+        UISizeConstraint_2.MinSize = Vector2.new(350, 40)
 
-    credit.Name = "credit"
-    credit.Parent = Frame
-    credit.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    credit.BackgroundTransparency = 1.000
-    credit.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    credit.BorderSizePixel = 0
-    credit.Position = UDim2.new(0, 5, 0, 121)
-    credit.Size = UDim2.new(0, 162, 0, 21)
-    credit.Font = Enum.Font.SourceSansBold
-    credit.Text = "by ALUMILAI"
-    credit.TextColor3 = Color3.fromRGB(221, 221, 221)
-    credit.TextScaled = true
-    credit.TextSize = 14.000
-    credit.TextWrapped = true
-    credit.TextXAlignment = Enum.TextXAlignment.Left
+        credit.Name = "credit"
+        credit.Parent = Frame
+        credit.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        credit.BackgroundTransparency = 1.000
+        credit.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        credit.BorderSizePixel = 0
+        credit.Position = UDim2.new(0, 5, 0, 121)
+        credit.Size = UDim2.new(0, 162, 0, 21)
+        credit.Font = Enum.Font.SourceSansBold
+        credit.Text = "by ALUMILAI"
+        credit.TextColor3 = Color3.fromRGB(221, 221, 221)
+        credit.TextScaled = true
+        credit.TextSize = 14.000
+        credit.TextWrapped = true
+        credit.TextXAlignment = Enum.TextXAlignment.Left
 
-    version.Name = "version"
-    version.Parent = Frame
-    version.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    version.BackgroundTransparency = 1.000
-    version.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    version.BorderSizePixel = 0
-    version.Position = UDim2.new(0, 191, 0, 121)
-    version.Size = UDim2.new(0, 162, 0, 21)
-    version.Font = Enum.Font.SourceSansBold
-    version.Text = "New version"
-    version.TextColor3 = Color3.fromRGB(221, 221, 221)
-    version.TextScaled = true
-    version.TextSize = 14.000
-    version.TextWrapped = true
-    version.TextXAlignment = Enum.TextXAlignment.Right
+        version.Name = "version"
+        version.Parent = Frame
+        version.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        version.BackgroundTransparency = 1.000
+        version.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        version.BorderSizePixel = 0
+        version.Position = UDim2.new(0, 191, 0, 121)
+        version.Size = UDim2.new(0, 162, 0, 21)
+        version.Font = Enum.Font.SourceSansBold
+        version.Text = "New version"
+        version.TextColor3 = Color3.fromRGB(221, 221, 221)
+        version.TextScaled = true
+        version.TextSize = 14.000
+        version.TextWrapped = true
+        version.TextXAlignment = Enum.TextXAlignment.Right
 
-    UIScale.Parent = Frame
+        UIScale.Parent = Frame
 
-    Menu.Name = "Menu"
-    Menu.Parent = Frame
-    Menu.AnchorPoint = Vector2.new(1, 0)
-    Menu.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    Menu.BackgroundTransparency = 1.000
-    Menu.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Menu.BorderSizePixel = 0
-    Menu.Position = UDim2.new(1, 0, 0, 0)
-    Menu.Size = UDim2.new(0.277777791, 0, 0.138888896, 0)
+        Menu.Name = "Menu"
+        Menu.Parent = Frame
+        Menu.AnchorPoint = Vector2.new(1, 0)
+        Menu.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        Menu.BackgroundTransparency = 1.000
+        Menu.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        Menu.BorderSizePixel = 0
+        Menu.Position = UDim2.new(1, 0, 0, 0)
+        Menu.Size = UDim2.new(0.277777791, 0, 0.138888896, 0)
 
-    UIListLayout.Parent = Menu
-    UIListLayout.FillDirection = Enum.FillDirection.Horizontal
-    UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
-    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    UIListLayout.Padding = UDim.new(0, 5)
+        UIListLayout.Parent = Menu
+        UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+        UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+        UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        UIListLayout.Padding = UDim.new(0, 5)
 
-    UIPadding.Parent = Menu
-    UIPadding.PaddingRight = UDim.new(0, 5)
-    UIPadding.PaddingTop = UDim.new(0, 5)
+        UIPadding.Parent = Menu
+        UIPadding.PaddingRight = UDim.new(0, 5)
+        UIPadding.PaddingTop = UDim.new(0, 5)
 
-    minimize.Name = "minimize"
-    minimize.Parent = Menu
-    minimize.Active = false
-    minimize.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-    minimize.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    minimize.BorderSizePixel = 0
-    minimize.Position = UDim2.new(0.938888907, -10, 0, 5)
-    minimize.Selectable = false
-    minimize.Size = UDim2.new(0, 15, 0, 15)
-    minimize.Text = ""
+        minimize.Name = "minimize"
+        minimize.Parent = Menu
+        minimize.Active = false
+        minimize.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+        minimize.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        minimize.BorderSizePixel = 0
+        minimize.Position = UDim2.new(0.938888907, -10, 0, 5)
+        minimize.Selectable = false
+        minimize.Size = UDim2.new(0, 15, 0, 15)
+        minimize.Text = ""
 
-    UICorner_2.CornerRadius = UDim.new(1, 0)
-    UICorner_2.Parent = minimize
+        UICorner_2.CornerRadius = UDim.new(1, 0)
+        UICorner_2.Parent = minimize
 
-    Close.Name = "Close"
-    Close.Parent = Menu
-    Close.Active = false
-    Close.BackgroundColor3 = Color3.fromRGB(255, 0, 4)
-    Close.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Close.BorderSizePixel = 0
-    Close.LayoutOrder = 1
-    Close.Position = UDim2.new(0.938888907, -10, 0, 5)
-    Close.Selectable = false
-    Close.Size = UDim2.new(0, 15, 0, 15)
-    Close.Text = ""
+        Close.Name = "Close"
+        Close.Parent = Menu
+        Close.Active = false
+        Close.BackgroundColor3 = Color3.fromRGB(255, 0, 4)
+        Close.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        Close.BorderSizePixel = 0
+        Close.LayoutOrder = 1
+        Close.Position = UDim2.new(0.938888907, -10, 0, 5)
+        Close.Selectable = false
+        Close.Size = UDim2.new(0, 15, 0, 15)
+        Close.Text = ""
 
-    UICorner_3.CornerRadius = UDim.new(1, 0)
-    UICorner_3.Parent = Close
+        UICorner_3.CornerRadius = UDim.new(1, 0)
+        UICorner_3.Parent = Close
 
-    ImageLabel.Parent = Frame
-    ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    ImageLabel.BackgroundTransparency = 1.000
-    ImageLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    ImageLabel.BorderSizePixel = 0
-    ImageLabel.Position = UDim2.new(0.438888878, 0, 0, 96)
-    ImageLabel.Size = UDim2.new(0, 40, 0, 40)
-    ImageLabel.Image = "rbxassetid://6947202399"
+        ImageLabel.Parent = Frame
+        ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        ImageLabel.BackgroundTransparency = 1.000
+        ImageLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        ImageLabel.BorderSizePixel = 0
+        ImageLabel.Position = UDim2.new(0.438888878, 0, 0, 96)
+        ImageLabel.Size = UDim2.new(0, 40, 0, 40)
+        ImageLabel.Image = "rbxassetid://6947202399"
 
-    if game:GetService("UserInputService").TouchEnabled then
-        UIScale.Scale = 0.5
+        if game:GetService("UserInputService").TouchEnabled then
+            UIScale.Scale = 0.5
+        end
+
+        return ScreenGui, Frame, toggle, minimize, Close
     end
 
-    return ScreenGui, Frame, toggle, minimize, Close
-end
-
-local ScreenGui, Frame, toggle, minimize, Close = gui()
-local uis = game:GetService("UserInputService")
-local dargging
-local draginput
-local dragstart
-local startpos
-local function update(input)
-	local delta = input.Position - dragstart
-	Frame.Position = UDim2.new(startpos.X.Scale, startpos.X.Offset + delta.X, startpos.Y.Scale, startpos.Y.Offset + delta.Y)
-end
-Frame.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-		dragging = true
-		dragstart = input.Position
-		startpos = Frame.Position
-
-		input.Changed:Connect(function()
-			if input.UserInputState == Enum.UserInputState.End then
-				dragging = false
-			end
-		end)
-	end
-end)
-Frame.InputChanged:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touce then
-		draginput = input
-	end
-end)
-uis.InputChanged:Connect(function(input)
-	if input == draginput and dragging then
-		if Frame.Visible then
-			update(input)
-		end
-	end
-end)
---------------------------------------------------------------------------------------close-gui-----------------------------------------------------------------------------------------------------
-Close.MouseButton1Click:Connect(function()
-	closeall = true
-	AutoChest:Clear()
-end)
-------------------------------------------------------------------------------------toggle-on/off-----------------------------------------------------------------------------------------------------
-toggle.MouseButton1Click:Connect(function()
-    AutoChest.Status = not AutoChest.Status
-
-    toggle.ImageColor3 = AutoChest.Status and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
-end)
-
-local mini = false
-minimize.MouseButton1Click:Connect(function()
-    mini = not mini
-
-    if mini then
-        game:GetService("TweenService"):Create(Frame, TweenInfo.new(0.2), {Size = UDim2.new(0, 359, 0, 47)}):Play()
-    else
-        game:GetService("TweenService"):Create(Frame, TweenInfo.new(0.2), {Size = UDim2.new(0, 359, 0, 144)}):Play()
+    ScreenGui, Frame, toggle, minimize, Close = gui()
+    local uis = game:GetService("UserInputService")
+    local dargging
+    local draginput
+    local dragstart
+    local startpos
+    local function update(input)
+        local delta = input.Position - dragstart
+        Frame.Position = UDim2.new(startpos.X.Scale, startpos.X.Offset + delta.X, startpos.Y.Scale, startpos.Y.Offset + delta.Y)
     end
-end)
+    Frame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragstart = input.Position
+            startpos = Frame.Position
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+    Frame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            draginput = input
+        end
+    end)
+    uis.InputChanged:Connect(function(input)
+        if input == draginput and dragging then
+            if Frame.Visible then
+                update(input)
+            end
+        end
+    end)
+
+    Close.MouseButton1Click:Connect(function()
+        closeall = true
+        AutoChest:Clear()
+    end)
+
+    toggle.MouseButton1Click:Connect(function()
+        AutoChest.Status = not AutoChest.Status
+
+        toggle.ImageColor3 = AutoChest.Status and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+    end)
+
+    local mini = false
+    minimize.MouseButton1Click:Connect(function()
+        mini = not mini
+
+        if mini then
+            game:GetService("TweenService"):Create(Frame, TweenInfo.new(0.2), {Size = UDim2.new(0, 359, 0, 47)}):Play()
+        else
+            game:GetService("TweenService"):Create(Frame, TweenInfo.new(0.2), {Size = UDim2.new(0, 359, 0, 144)}):Play()
+        end
+    end)
+end
 
 function AutoChest:Clear()
     if AutoChest.MainLoop then task.cancel(AutoChest.MainLoop) end
