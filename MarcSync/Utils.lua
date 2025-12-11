@@ -3,7 +3,7 @@ local CollectionError = require("@Errors/Collection")
 local EntryError = require("@Errors/Entry")
 
 local HttpService = game:GetService("HttpService")
-local Types = require("@Types")
+local Types = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/MarcSync/Types.luau"))()
 
 function errorHandler(callInformation: {}, resultBody: any, resultObject: {}, retryCount: number)
 	local Error;
@@ -79,3 +79,4 @@ function utils.makeHTTPRequest(type: string, method: string, url: string, body: 
 end
 
 return utils
+
