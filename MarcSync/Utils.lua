@@ -1,9 +1,11 @@
 local AuthorizationError = require("@Errors/Authorization")
 local CollectionError = require("@Errors/Collection")
-local EntryError = require("@Errors/Entry")
+local EntryError = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/MarcSync/Objects/Entry.lua"))()
 
 local HttpService = game:GetService("HttpService")
 local Types = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/MarcSync/Types.luau"))()
+
+local utils = {}
 
 function errorHandler(callInformation: {}, resultBody: any, resultObject: {}, retryCount: number)
 	local Error;
@@ -38,14 +40,12 @@ function errorHandler(callInformation: {}, resultBody: any, resultObject: {}, re
 		if retryCount > 0 then
 			warn("[MarcSync HTTPRequest Handler] MarcSync HTTP Request failed with error: "..Error.." and status code: "..statusCode..". Retrying Request. ("..retryCount..") retries left")
 			task.wait(3)
-			return require("@Utils").makeHTTPRequest(callInformation.type, callInformation.method, callInformation.url, callInformation.body, callInformation.authorization, {retryCount = retryCount - 1})
+			return utils.makeHTTPRequest(callInformation.type, callInformation.method, callInformation.url, callInformation.body, callInformation.authorization, {retryCount = retryCount - 1})
 		end
 	end
 
 	return {["success"] = false, ["errorMessage"] = Error}
 end
-
-local utils = {}
 
 function utils.makeHTTPRequest(type: string, method: string, url: string, body: {}, authorization: string, options: Types.ClientOptions):{["success"]: boolean, ["message"]: string}
 	local resultObj;
@@ -79,4 +79,5 @@ function utils.makeHTTPRequest(type: string, method: string, url: string, body: 
 end
 
 return utils
+
 
