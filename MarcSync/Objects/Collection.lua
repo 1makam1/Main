@@ -1,4 +1,4 @@
-local Utils = require("@/Utils")
+local Utils = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/MarcSync/Utils.luau"))()
 local Entry = require("@Entry")
 
 local Types = require("@/Types")
@@ -73,3 +73,4 @@ return {
 		return self
 	end
 }
+
