@@ -5,7 +5,7 @@ local tokens = {
 
 -- DO NOT EDIT THE FOLLOWING LINES BELOW, UNLESS YOU KNOW WHAT YOU ARE DOING!
 
-local Utils = require("@Utils")
+local Utils = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/MarcSync/Utils.luau"))()
 local MarcSyncClient = {}
 
 local Types = require("@Types")
@@ -64,5 +64,6 @@ return {
 		return self
 	end
 }
+
 
 
