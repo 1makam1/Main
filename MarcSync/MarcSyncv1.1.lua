@@ -5,6 +5,7 @@ local tokens = {
 
 -- DO NOT EDIT THE FOLLOWING LINES BELOW, UNLESS YOU KNOW WHAT YOU ARE DOING!
 
+local Collection = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/MarcSync/Objects/Collection.lua"))()
 local Utils = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/MarcSync/Utils.luau"))()
 local MarcSyncClient = {}
 
@@ -18,31 +19,31 @@ MarcSyncClient.getVersion = function(self:typeof(MarcSyncClient), clientId: numb
 	return result["version"]
 end
 
-MarcSyncClient.createCollection = function(self:typeof(MarcSyncClient), collectionName: string):typeof(require("@Objects/Collection").new())
+MarcSyncClient.createCollection = function(self:typeof(MarcSyncClient), collectionName: string):typeof(Collection.new())
 	if not self._accessToken then error("[MarcSync] Please set a Token before using MarcSync.") end
 	if not collectionName then error("No CollectionName Provided") end
 	local result = Utils.makeHTTPRequest("collection", "POST", "https://api.marcsync.dev/v0/collection/"..collectionName, {}, self._accessToken, self._options);
 
 	if not result["success"] then error(result["errorMessage"]) end
-	result = require("@Objects/Collection").new(collectionName, self._accessToken, self._options)
+	result = Collection.new(collectionName, self._accessToken, self._options)
 
 	return result
 end
-MarcSyncClient.fetchCollection = function(self:typeof(MarcSyncClient), collectionName: string):typeof(require("@Objects/Collection").new())
+MarcSyncClient.fetchCollection = function(self:typeof(MarcSyncClient), collectionName: string):typeof(Collection.new())
 	self:_checkInstallation()
 	if not collectionName then error("No CollectionName Provided") end
 	local result = Utils.makeHTTPRequest("collection", "GET", "https://api.marcsync.dev/v0/collection/"..collectionName, {}, self._accessToken, self._options);
 	
 	if not result["success"] then error(result["errorMessage"]) end
-	result = require("@Objects/Collection").new(collectionName, self._accessToken, self._options)
+	result = Collection.new(collectionName, self._accessToken, self._options)
 
 	return result
 end
-MarcSyncClient.getCollection = function(self:typeof(MarcSyncClient), collectionName: string):typeof(require("@Objects/Collection").new())
+MarcSyncClient.getCollection = function(self:typeof(MarcSyncClient), collectionName: string):typeof(Collection.new())
 	if typeof(self) ~= "table" then error("Please use : instead of .") end
 	self:_checkInstallation()
 	if not collectionName then error("No CollectionName Provided") end
-	return require("@Objects/Collection").new(collectionName, self._accessToken, self._options)
+	return Collection.new(collectionName, self._accessToken, self._options)
 end
 
 return {
@@ -64,6 +65,7 @@ return {
 		return self
 	end
 }
+
 
 
 
