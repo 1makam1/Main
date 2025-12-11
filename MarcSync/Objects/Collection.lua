@@ -11,7 +11,7 @@ Collection.createEntry = function(self:typeof(Collection), data:Types.EntryData)
 	
 	if result["success"] and result["objectId"] then
 		data["_id"] = result["objectId"]
-		result = require("@Entry").new(self._collectionName, data, self._accessToken, self._options)
+		result = Entry.new(self._collectionName, data, self._accessToken, self._options)
 	else
 		error(result["errorMessage"])
 	end
@@ -34,7 +34,7 @@ Collection.getEntries = function(self:typeof(Collection), filters:Types.EntryDat
 	if result["success"] and result["entries"] then
 		local _result = {}
 		for index,entry in pairs(result["entries"]) do
-			_result[index] = require("@Entry").new(self._collectionName, entry, self._accessToken, self._options)
+			_result[index] = Entry.new(self._collectionName, entry, self._accessToken, self._options)
 		end
 		result = _result
 	else
@@ -73,6 +73,7 @@ return {
 		return self
 	end
 }
+
 
 
 
