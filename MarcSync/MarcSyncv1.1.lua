@@ -5,7 +5,7 @@ local tokens = {
 
 -- DO NOT EDIT THE FOLLOWING LINES BELOW, UNLESS YOU KNOW WHAT YOU ARE DOING!
 
-local Utils = require("@Utils")
+local Utils = require(script.Parent.Utils)
 local MarcSyncClient = {}
 
 local Types = require("@Types")
@@ -64,3 +64,4 @@ return {
 		return self
 	end
 }
+
