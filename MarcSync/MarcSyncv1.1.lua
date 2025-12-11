@@ -4,9 +4,10 @@ local tokens = {
 
 
 -- DO NOT EDIT THE FOLLOWING LINES BELOW, UNLESS YOU KNOW WHAT YOU ARE DOING!
-print(loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/MarcSync/Objects/Collection.lua")))
+local a = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/MarcSync/Objects/Collection.lua"))
+print(a)
 
-local Collection = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/MarcSync/Objects/Collection.lua"))()
+local Collection = a()
 local Utils = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/MarcSync/Utils.luau"))()
 local MarcSyncClient = {}
 
@@ -66,6 +67,7 @@ return {
 		return self
 	end
 }
+
 
 
 
