@@ -1,5 +1,5 @@
 local Utils = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/MarcSync/Utils.luau"))()
-local Entry = require("@Entry")
+local Entry = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/MarcSync/Objects/Entry.lua"))()
 
 local Types = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/MarcSync/Types.luau"))()
 
@@ -73,5 +73,6 @@ return {
 		return self
 	end
 }
+
 
 
