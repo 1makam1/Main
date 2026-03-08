@@ -94,7 +94,7 @@ local function InitAutoExecute()
 	Player.OnTeleport:Connect(function(State)
 		if (not TeleportCheck) and queueteleport then
 			TeleportCheck = true
-			queueteleport("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/Apex%20Universal%20Script/Init.luau")
+			queueteleport('loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/Apex%20Universal%20Script/Init.luau"))()')
 		end
 	end)
 end
