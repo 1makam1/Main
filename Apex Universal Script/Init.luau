@@ -2,7 +2,7 @@ local studio = game:GetService("RunService"):IsStudio()
 local path = studio and script.Parent or game:GetService("CoreGui")
 local panel = path:FindFirstChild("Apex Universal Script")
 
-if panel then panel:Destroy() return end
+if panel then panel:Destroy() end
 
 local ScreenGui = Instance.new("ScreenGui", path)
 local Container = Instance.new("Frame", ScreenGui)
