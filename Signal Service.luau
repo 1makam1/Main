@@ -1,25 +1,25 @@
 local GuiService = game:GetService("GuiService")
 
-local KeyService = {}
+local SignalService = {}
 
-function KeyService:SendKey(key: Enum.KeyCode)
+function SignalService:SendKey(key: Enum.KeyCode)
     local VIM = game:GetService("VirtualInputManager")
     
     VIM:SendKeyEvent(false, key, false, game)
     task.wait()
     VIM:SendKeyEvent(true, key, false, game)
 end
-function KeyService:ClickButton(btn: GuiButton)
+function SignalService:ClickButton(btn: GuiButton)
     GuiService.SelectedObject = btn
     
-    KeyService:SendKey(Enum.KeyCode.Return)
-    KeyService:SendKey(Enum.KeyCode.Return)
+    SignalService:SendKey(Enum.KeyCode.Return)
+    SignalService:SendKey(Enum.KeyCode.Return)
     
     GuiService.SelectedObject = nil
 end
-function KeyService:ExitRobloxMenu(closingYield: number?)
+function SignalService:ExitRobloxMenu(closingYield: number?)
     if GuiService.MenuIsOpen then
-        KeyService:SendKey(Enum.KeyCode.Escape)
+        SignalService:SendKey(Enum.KeyCode.Escape)
         
         if closingYield then
             task.wait(closingYield)
@@ -27,4 +27,4 @@ function KeyService:ExitRobloxMenu(closingYield: number?)
     end
 end
 
-return KeyService
+return SignalService
