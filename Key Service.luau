@@ -26,3 +26,5 @@ function KeyService:ExitRobloxMenu(closingYield: number?)
         end
     end
 end
+
+return KeyService
