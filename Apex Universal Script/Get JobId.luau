@@ -1,0 +1,1 @@
+setclipboard(game.JobId)
