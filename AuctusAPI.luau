@@ -91,7 +91,9 @@ function Cassade.new(title: string, collection: {any})
     --══════════════ set up window ══════════════════════
     local userInputService = cloneref and cloneref(game:GetService("UserInputService")) or game:GetService("UserInputService")
 
-    collection.app = CascadeLibrary.New({WindowPill = true, Theme = CascadeLibrary.Themes.Dark})
+    local app = CascadeLibrary.New({WindowPill = true, Theme = CascadeLibrary.Themes.Dark})
+    self.app = app
+    collection.app = app
 
     local window = collection.app:Window({Title = title, Subtitle = "Apex Hub", Size = userInputService.TouchEnabled and UDim2.fromOffset(550, 325) or UDim2.fromOffset(850, 530)})
     self.window = window
@@ -135,7 +137,7 @@ function Cassade:CreateSetting()
                 row:Right():Toggle({
                     Value = true,
                     ValueChanged = function(_self, value: boolean)
-                        self.app.Theme = value and CascadeLibrary.Themes.Dark or CascadeLibrary.Themes.Light
+                        self.app.Theme = value and self.cassade.Themes.Dark or self.cassade.Themes.Light
                     end,
                 })
             end
