@@ -116,11 +116,12 @@ function Cassade.new(title: string, collection: {any})
     collection.PlayerDropdown = {}
 
     --══════════════ init settings ══════════════════════
-    if not isfile("Apex Hub Script/CassadeSettings.txt") then
-        writefile("Apex Hub Script/CassadeSettings.txt", "")
+    if not isfile("Apex Hub Script/CassadeSettings.json") then
+        writefile("Apex Hub Script/CassadeSettings.json", "{}")
     end
 
-    local settings = HttpService:JSONDecode(readfile("Apex Hub Script/CassadeSettings.txt")) or {}
+    local String = readfile("Apex Hub Script/CassadeSettings.json")
+    local settings = HttpService:JSONDecode(String:match("{") and String or "{}")
     self.window.Searching = settings.Searching or true
     self.window.Draggable = settings.Draggable or true
     self.window.Resizable = settings.Resizable or true
