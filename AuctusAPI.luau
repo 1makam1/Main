@@ -122,11 +122,11 @@ function Cassade.new(title: string, collection: {any})
 
     local String = readfile("Apex Hub Script/CassadeSettings.json")
     local settings = HttpService:JSONDecode(String:match("{") and String or "{}")
-    self.window.Searching = settings.Searching or true
-    self.window.Draggable = settings.Draggable or true
-    self.window.Resizable = settings.Resizable or true
-    self.window.Dropshadow = settings.Dropshadow or true
-    self.window.UIBlur = settings.UIBlur or true
+    self.window.Searching = settings.Searching ~= nil and settings.Searching or true
+    self.window.Draggable = settings.Draggable ~= nil and settings.Draggable or true
+    self.window.Resizable = settings.Resizable ~= nil and settings.Resizable or true
+    self.window.Dropshadow = settings.Dropshadow ~= nil and settings.Dropshadow or true
+    self.window.UIBlur = settings.UIBlur ~= nil and settings.UIBlur or true
     self.collection.app.Theme = settings.WhiteTheme and self.cassade.Themes.Light or self.cassade.Themes.Dark
     self.minimizeKeybind = settings.minimizeKeybind or Enum.KeyCode.RightControl
 
