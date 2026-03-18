@@ -152,7 +152,7 @@ function Cassade:CreateSetting(property: property)
             )
 
             row:Right():Toggle({
-                Value = self.collection.app.Theme == self.cassade.Themes.Dark,
+                Value = not self.WhiteMode,
                 ValueChanged = function(_self, value: boolean)
                     self.collection.app.Theme = value and self.cassade.Themes.Dark or self.cassade.Themes.Light
                     self.WhiteMode = not value
