@@ -1,5 +1,7 @@
 local AuctusAPI = {}
 
+local HttpService = game:GetService("HttpService")
+
 -- ═══════════════════════════════════════════════════════════════
 -- ⌨️ INPUT SIMULATION
 -- ═══════════════════════════════════════════════════════════════
@@ -77,11 +79,13 @@ local CascadeLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.co
 local Cassade = {}
 Cassade.__index = Cassade
 
+type property = {[string]: any}
+
 function Cassade.new(title: string, collection: {any})
     --══════════════ cassade method ══════════════════════
     local self = setmetatable({}, Cassade)
+    self.collection = collection
     self.cassade = CascadeLibrary
-    self.minimizeKeybind = Enum.KeyCode.RightControl
 
     self.Sections = {}
     self.Tabs = {}
@@ -91,9 +95,7 @@ function Cassade.new(title: string, collection: {any})
     --══════════════ set up window ══════════════════════
     local userInputService = cloneref and cloneref(game:GetService("UserInputService")) or game:GetService("UserInputService")
 
-    local app = CascadeLibrary.New({WindowPill = true, Theme = CascadeLibrary.Themes.Dark})
-    self.app = app
-    collection.app = app
+    collection.app = CascadeLibrary.New({WindowPill = true, Theme = CascadeLibrary.Themes.Dark})
 
     local window = collection.app:Window({Title = title, Subtitle = "Apex Hub", Size = userInputService.TouchEnabled and UDim2.fromOffset(550, 325) or UDim2.fromOffset(850, 530)})
     self.window = window
@@ -113,116 +115,147 @@ function Cassade.new(title: string, collection: {any})
 
     collection.PlayerDropdown = {}
 
+    --══════════════ init settings ══════════════════════
+    if not isfile("Apex Hub Script/CassadeSettings.txt") then
+        writefile("Apex Hub Script/CassadeSettings.txt", "")
+    end
+
+    local settings = HttpService:JSONDecode(readfile("Apex Hub Script/CassadeSettings.txt")) or {}
+    self.window.Searching = settings.Searching or true
+    self.window.Draggable = settings.Draggable or true
+    self.window.Resizable = settings.Resizable or true
+    self.window.Dropshadow = settings.Dropshadow or true
+    self.window.UIBlur = settings.UIBlur or true
+    self.collection.app.Theme = settings.DarkTheme and self.cassade.Themes.Dark or self.cassade.Themes.Light
+    self.minimizeKeybind = settings.minimizeKeybind or Enum.KeyCode.RightControl
+
     return self
 end
 
-function Cassade:CreateSetting()
-    do -- gui setting tab
-        self:Section("Gui Appearance", {Disclosure = false, Title = "Gui Appearance"})
-            self:Tab("GuiSettingsTab", "Gui Appearance", {Title = "GUI Setting", Icon = "http://www.roblox.com/asset/?id=70542492197391"})
-                self:Form("AppearanceForm", "GuiSettingsTab", {Title = "Appearance"})
-                self:Form("InputForm", "GuiSettingsTab", {Title = "Input"})
-                self:Form("EffectsForm", "GuiSettingsTab", {Title = "Effects", Subtitle = "These effects may be resource intensive across different systems."})
+function Cassade:CreateSetting(property: property)
+    self:Section("Gui Appearance", property)
+        self:Tab("GuiSettingsTab", "Gui Appearance", {Title = "GUI Setting", Icon = "http://www.roblox.com/asset/?id=70542492197391"})
+            self:Form("AppearanceForm", "GuiSettingsTab", {Title = "Appearance"})
+            self:Form("InputForm", "GuiSettingsTab", {Title = "Input"})
+            self:Form("EffectsForm", "GuiSettingsTab", {Title = "Effects", Subtitle = "These effects may be resource intensive across different systems."})
 
-        do -- Appearance
+    do -- Appearance
 
-            do -- Dark mode
-                local row = self:Row(
-                    "DarkModeRow",
-                    "AppearanceForm",
-                    "Dark mode",
-                    "An application appearance setting that uses a dark color palette to provide a comfortable viewing experience tailored for low-light environments."
-                )
+        do -- Dark mode
+            local row = self:Row(
+                "DarkModeRow",
+                "AppearanceForm",
+                "Dark mode",
+                "An application appearance setting that uses a dark color palette to provide a comfortable viewing experience tailored for low-light environments."
+            )
 
-                row:Right():Toggle({
-                    Value = true,
-                    ValueChanged = function(_self, value: boolean)
-                        self.app.Theme = value and self.cassade.Themes.Dark or self.cassade.Themes.Light
-                    end,
-                })
-            end
+            row:Right():Toggle({
+                Value = settings.DarkTheme and true or false,
+                ValueChanged = function(_self, value: boolean)
+                    self.collection.app.Theme = value and self.cassade.Themes.Dark or self.cassade.Themes.Light
+                    self:UpdateSetting()
+                end,
+            })
+        end
+    end
+
+    do -- Input
+
+        do -- Minimize shortcut
+            local row = self:Row("MinimizeShortcutRow", "InputForm", "Minimize shortcut")
+
+            row:Right():KeybindField({
+                Value = self.minimizeKeybind,
+                ValueChanged = function(_self, value: Enum.KeyCode)
+                    self.minimizeKeybind = value
+                    self:UpdateSetting()
+                end,
+            })
         end
 
-        do -- Input
+        do -- Searching
+            local row = self:Row(
+                "SearchingRow",
+                "InputForm",
+                "Searchable",
+                "Allows users to search for content in a page with a search-field in the titlebar."
+            )
 
-            do -- Minimize shortcut
-                local row = self:Row("MinimizeShortcutRow", "InputForm", "Minimize shortcut")
-
-                row:Right():KeybindField({
-                    Value = self.minimizeKeybind,
-                    ValueChanged = function(_self, value: Enum.KeyCode)
-                        self.minimizeKeybind = value
-                    end,
-                })
-            end
-
-            do -- Searching
-                local row = self:Row(
-                    "SearchingRow",
-                    "InputForm",
-                    "Searchable",
-                    "Allows users to search for content in a page with a search-field in the titlebar."
-                )
-
-                row:Right():Toggle({
-                    Value = self.window.Searching,
-                    ValueChanged = function(_self, value: boolean)
-                        self.window.Searching = value
-                    end,
-                })
-            end
-
-            do -- Draggable
-                local row = self:Row("DraggableRow", "InputForm", "Draggable", "Allows users to move the window with a mouse or touch device.")
-
-                row:Right():Toggle({
-                    Value = self.window.Draggable,
-                    ValueChanged = function(_self, value: boolean)
-                        self.window.Draggable = value
-                    end,
-                })
-            end
-
-            do -- Resizable
-                local row = self:Row("ResizableRow", "InputForm", "Resizable", "Allows users to resize the window with a mouse or touch device.")
-
-                row:Right():Toggle({
-                    Value = self.window.Resizable,
-                    ValueChanged = function(_self, value: boolean)
-                        self.window.Resizable = value
-                    end,
-                })
-            end
+            row:Right():Toggle({
+                Value = self.window.Searching,
+                ValueChanged = function(_self, value: boolean)
+                    self.window.Searching = value
+                    self:UpdateSetting()
+                end,
+            })
         end
 
-        do -- Effects
+        do -- Draggable
+            local row = self:Row("DraggableRow", "InputForm", "Draggable", "Allows users to move the window with a mouse or touch device.")
 
-            do -- Dropshadow
-                local row = self:Row("DropshadowRow", "EffectsForm", "Dropshadow", "Enables a dropshadow effect on the window.")
+            row:Right():Toggle({
+                Value = self.window.Draggable,
+                ValueChanged = function(_self, value: boolean)
+                    self.window.Draggable = value
+                    self:UpdateSetting()
+                end,
+            })
+        end
 
-                row:Right():Toggle({
-                    Value = self.window.Dropshadow,
-                    ValueChanged = function(_self, value: boolean)
-                        self.window.Dropshadow = value
-                    end,
-                })
-            end
+        do -- Resizable
+            local row = self:Row("ResizableRow", "InputForm", "Resizable", "Allows users to resize the window with a mouse or touch device.")
 
-            do -- UI Blur
-                local row = self:Row("UIBlurRow", "EffectsForm", "Background blur", "Enables a UI background blur effect on the window. This can be detectable in some games.")
+            row:Right():Toggle({
+                Value = self.window.Resizable,
+                ValueChanged = function(_self, value: boolean)
+                    self.window.Resizable = value
+                    self:UpdateSetting()
+                end,
+            })
+        end
+    end
 
-                row:Right():Toggle({
-                    Value = self.window.UIBlur,
-                    ValueChanged = function(_self, value: boolean)
-                        self.window.UIBlur = value
-                    end,
-                })
-            end
+    do -- Effects
+
+        do -- Dropshadow
+            local row = self:Row("DropshadowRow", "EffectsForm", "Dropshadow", "Enables a dropshadow effect on the window.")
+
+            row:Right():Toggle({
+                Value = self.window.Dropshadow,
+                ValueChanged = function(_self, value: boolean)
+                    self.window.Dropshadow = value
+                    self:UpdateSetting()
+                end,
+            })
+        end
+
+        do -- UI Blur
+            local row = self:Row("UIBlurRow", "EffectsForm", "Background blur", "Enables a UI background blur effect on the window. This can be detectable in some games.")
+
+            row:Right():Toggle({
+                Value = self.window.UIBlur,
+                ValueChanged = function(_self, value: boolean)
+                    self.window.UIBlur = value
+                    self:UpdateSetting()
+                end,
+            })
         end
     end
 end
 
-type property = {[string]: any}
+function Cassade:UpdateSetting()
+    local settings = {}
+
+    settings.Searching = self.window.Searching
+    settings.Draggable = self.window.Draggable
+    settings.Resizable = self.window.Resizable
+    settings.Dropshadow = self.window.Dropshadow
+    settings.UIBlur = self.window.UIBlur
+    settings.DarkTheme = self.collection.app.Theme == self.cassade.Themes.Dark
+    settings.minimizeKeybind = self.minimizeKeybind
+
+    writefile("Apex Hub Script/CassadeSettings.txt", HttpService:JSONEncode(settings))
+end
 
 function Cassade:Section(sectionId: string, property: property?)
     self.Sections[sectionId] = self.window:Section(property)
