@@ -1,1 +1,1 @@
-setclipboard(game.Players.LocalPlayer.Character.HumanoidRootPart.Position)
+setclipboard(tostring(game.Players.LocalPlayer.Character.HumanoidRootPart.Position))
