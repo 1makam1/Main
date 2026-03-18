@@ -78,17 +78,27 @@ local Cassade = {}
 Cassade.__index = Cassade
 
 function Cassade.new(title: string, collection: {any})
+    --══════════════ cassade method ══════════════════════
+    local self = setmetatable({}, Cassade)
+    self.cassade = CascadeLibrary
+    self.minimizeKeybind = Enum.KeyCode.RightControl
+
+    self.Sections = {}
+    self.Tabs = {}
+    self.Forms = {}
+    self.Rows = {}
+
     --══════════════ set up window ══════════════════════
     local userInputService = cloneref and cloneref(game:GetService("UserInputService")) or game:GetService("UserInputService")
-    local minimizeKeybind = Enum.KeyCode.RightControl
 
     collection.app = CascadeLibrary.New({WindowPill = true, Theme = CascadeLibrary.Themes.Dark})
 
     local window = collection.app:Window({Title = title, Subtitle = "Apex Hub", Size = userInputService.TouchEnabled and UDim2.fromOffset(550, 325) or UDim2.fromOffset(850, 530)})
+    self.window = window
 
     --// minimize
     userInputService.InputEnded:Connect(function(input, gameProcessedEvent)
-        if input.KeyCode == minimizeKeybind and not gameProcessedEvent then
+        if input.KeyCode == self.minimizeKeybind and not gameProcessedEvent then
             window.Minimized = not window.Minimized
         end
     end)
@@ -100,17 +110,6 @@ function Cassade.new(title: string, collection: {any})
     window.Sidebar.Margins.Size = UDim2.new(1, 0, 1, 0)
 
     collection.PlayerDropdown = {}
-
-    --══════════════ cassade method ══════════════════════
-    local self = setmetatable({}, Cassade)
-    self.cassade = CascadeLibrary
-    self.window = window
-    self.minimizeKeybind = minimizeKeybind
-
-    self.Sections = {}
-    self.Tabs = {}
-    self.Forms = {}
-    self.Rows = {}
 
     return self
 end
