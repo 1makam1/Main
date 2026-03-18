@@ -135,7 +135,7 @@ function Cassade:CreateSetting()
                 row:Right():Toggle({
                     Value = true,
                     ValueChanged = function(_self, value: boolean)
-                        self.app.Theme = value and self.cassade.Themes.Dark or self.cassade.Themes.Light
+                        self.app.Theme = value and CascadeLibrary.Themes.Dark or CascadeLibrary.Themes.Light
                     end,
                 })
             end
@@ -164,7 +164,7 @@ function Cassade:CreateSetting()
 
                 row:Right():Toggle({
                     Value = self.window.Searching,
-                    ValueChanged = function(self, value: boolean)
+                    ValueChanged = function(_self, value: boolean)
                         self.window.Searching = value
                     end,
                 })
