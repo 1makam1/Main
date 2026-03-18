@@ -152,11 +152,10 @@ local function MakeButton(buttonName: string, color: "Green" | "Yellow" | "Red")
 	button_stroke.StrokeSizingMode = Enum.StrokeSizingMode.ScaledSize
 	button_stroke.Thickness = 0.05
 
-	button.MouseButton1Click:Connect(function()
-		local file = "https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/Apex%20Universal%20Script/"..buttonName:gsub(" ", "%%20")..".luau"
+	local file = "https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/Apex%20Universal%20Script/"..buttonName:gsub(" ", "%%20")..".luau"
+	local func = loadstring(game:HttpGet(file))
 
-		loadstring(game:HttpGet(file))()
-	end)
+	button.MouseButton1Click:Connect(func)
 end
 
 InitContainer()
