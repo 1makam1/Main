@@ -151,11 +151,13 @@ local function MakeButton(buttonName: string, color: "Green" | "Yellow" | "Red")
 	button_stroke.Color = Color3.fromRGB(color.R*2, color.G*2, color.B*2)
 	button_stroke.StrokeSizingMode = Enum.StrokeSizingMode.ScaledSize
 	button_stroke.Thickness = 0.05
+	
+	task.spawn(function()
+		local file = "https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/Apex%20Universal%20Script/"..buttonName:gsub(" ", "%%20")..".luau"
+		local func = loadstring(game:HttpGet(file))
 
-	local file = "https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/Apex%20Universal%20Script/"..buttonName:gsub(" ", "%%20")..".luau"
-	local func = loadstring(game:HttpGet(file))
-
-	button.MouseButton1Click:Connect(func)
+		button.MouseButton1Click:Connect(func)
+	end)
 end
 
 InitContainer()
