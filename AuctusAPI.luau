@@ -67,6 +67,93 @@ function AuctusAPI:ValidateKey(key: string): boolean
 end
 
 -- ═══════════════════════════════════════════════════════════════
+-- 🪟 UI LIBRARY
+-- ═══════════════════════════════════════════════════════════════
+type Library = "Cassade" | "Fluent" | "WindUi"
+
+-- cassade
+local CascadeLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/Cassade.luau"))()
+
+local Cassade = {}
+Cassade.__index = Cassade
+
+function Cassade.new(title: string, collection: {any})
+    --══════════════ set up window ══════════════════════
+    local userInputService = cloneref and cloneref(game:GetService("UserInputService")) or game:GetService("UserInputService")
+    local minimizeKeybind = Enum.KeyCode.RightControl
+
+    collection.app = CascadeLibrary.New({WindowPill = true, Theme = CascadeLibrary.Themes.Dark})
+
+    local window = collection.app:Window({Title = title, Subtitle = "Apex Hub", Size = userInputService.TouchEnabled and UDim2.fromOffset(550, 325) or UDim2.fromOffset(850, 530)})
+
+    --// minimize
+    userInputService.InputEnded:Connect(function(input, gameProcessedEvent)
+        if input.KeyCode == minimizeKeybind and not gameProcessedEvent then
+            window.Minimized = not window.Minimized
+        end
+    end)
+
+    collection.CloseConnect = window.Destroying:Connect(function() if getgenv().CleanUpApexHub then getgenv().CleanUpApexHub() end end)
+
+    -- set sidebar size
+    window.Sidebar.Size = UDim2.new(0, 215, 1, 0)
+    window.Sidebar.Margins.Size = UDim2.new(1, 0, 1, 0)
+
+    collection.PlayerDropdown = {}
+
+    --══════════════ cassade method ══════════════════════
+    local self = setmetatable({}, Cassade)
+    self.cassade = CascadeLibrary
+    self.window = window
+    self.minimizeKeybind = minimizeKeybind
+
+    self.Sections = {}
+    self.Tabs = {}
+    self.Forms = {}
+    self.Rows = {}
+
+    return self
+end
+
+type property = {[string]: any}
+
+function Cassade:Section(sectionId: string, property: property?)
+    self.Sections[sectionId] = self.window:Section(property)
+
+    return self.Sections[sectionId]
+end
+
+function Cassade:Tab(tabId: string, sectionId: string, property: property?)
+    self.Tabs[tabId] = self.Sections[sectionId]:Tab(property)
+
+    return self.Tabs[tabId]
+end
+
+function Cassade:Form(formId: string, tabId: string, property: property?)
+    self.Forms[formId] = self.Tabs[tabId]:PageSection(property):Form()
+
+    return self.Forms[formId]
+end
+
+function Cassade:Row(rowId: string, formId: string, title: string, subtitle: string?)
+    self.Rows[rowId] = self.Forms[formId]:Row({SearchIndex = title})
+
+    self.Rows[rowId]:Left():TitleStack({Title = title, Subtitle = subtitle})
+
+    return self.Rows[rowId]
+end
+
+-- fluent
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local WindUi = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+
+function AuctusAPI.CreateApp(library: Library, title: string, collection: {any})
+    if library == "Cassade" then
+        return Cassade.new(title, collection)
+    end
+end
+
+-- ═══════════════════════════════════════════════════════════════
 -- 🛠️ UTILITY FUNCTIONS
 -- ═══════════════════════════════════════════════════════════════
 function AuctusAPI:DeepPrint(data: any)
