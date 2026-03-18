@@ -129,6 +129,7 @@ function Cassade.new(title: string, collection: {any})
     self.window.UIBlur = if settings.UIBlur ~= nil then settings.UIBlur else true
     self.collection.app.Theme = if settings.WhiteMode then self.cassade.Themes.Light else self.cassade.Themes.Dark
     self.minimizeKeybind = settings.minimizeKeybind or Enum.KeyCode.RightControl
+    self.WhiteMode = settings.WhiteMode
 
     return self
 end
@@ -154,6 +155,7 @@ function Cassade:CreateSetting(property: property)
                 Value = self.collection.app.Theme == self.cassade.Themes.Dark,
                 ValueChanged = function(_self, value: boolean)
                     self.collection.app.Theme = value and self.cassade.Themes.Dark or self.cassade.Themes.Light
+                    self.WhiteMode = not value
                     self:UpdateSetting()
                 end,
             })
@@ -252,11 +254,8 @@ function Cassade:UpdateSetting()
     settings.Resizable = self.window.Resizable
     settings.Dropshadow = self.window.Dropshadow
     settings.UIBlur = self.window.UIBlur
-    settings.WhiteMode = self.collection.app.Theme == self.cassade.Themes.Light
+    settings.WhiteMode = self.WhiteMode
     settings.minimizeKeybind = self.minimizeKeybind
-
-    print(self.collection.app.Theme == self.cassade.Themes.Light)
-    print(self.collection.app.Theme)
 
     writefile("Apex Hub Script/CassadeSettings.json", HttpService:JSONEncode(settings))
 end
