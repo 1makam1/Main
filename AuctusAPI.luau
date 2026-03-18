@@ -114,6 +114,112 @@ function Cassade.new(title: string, collection: {any})
     return self
 end
 
+function Cassade:CreateSetting()
+    do -- gui setting tab
+        self:Section("Gui Appearance", {Disclosure = false, Title = "Gui Appearance"})
+            self:Tab("GuiSettingsTab", "MainFunctions", {Title = "GUI Setting", Icon = "http://www.roblox.com/asset/?id=70542492197391"})
+                self:Form("AppearanceForm", "GuiSettingsTab", {Title = "Appearance"})
+                self:Form("InputForm", "GuiSettingsTab", {Title = "Input"})
+                self:Form("EffectsForm", "GuiSettingsTab", {Title = "Effects", Subtitle = "These effects may be resource intensive across different systems."})
+
+        do -- Appearance
+
+            do -- Dark mode
+                local row = self:Row(
+                    "DarkModeRow",
+                    "AppearanceForm",
+                    "Dark mode",
+                    "An application appearance setting that uses a dark color palette to provide a comfortable viewing experience tailored for low-light environments."
+                )
+
+                row:Right():Toggle({
+                    Value = true,
+                    ValueChanged = function(_self, value: boolean)
+                        self.app.Theme = value and self.cassade.Themes.Dark or self.cassade.Themes.Light
+                    end,
+                })
+            end
+        end
+
+        do -- Input
+
+            do -- Minimize shortcut
+                local row = self:Row("MinimizeShortcutRow", "InputForm", "Minimize shortcut")
+
+                row:Right():KeybindField({
+                    Value = self.minimizeKeybind,
+                    ValueChanged = function(_self, value: Enum.KeyCode)
+                        self.minimizeKeybind = value
+                    end,
+                })
+            end
+
+            do -- Searching
+                local row = self:Row(
+                    "SearchingRow",
+                    "InputForm",
+                    "Searchable",
+                    "Allows users to search for content in a page with a search-field in the titlebar."
+                )
+
+                row:Right():Toggle({
+                    Value = self.window.Searching,
+                    ValueChanged = function(self, value: boolean)
+                        self.window.Searching = value
+                    end,
+                })
+            end
+
+            do -- Draggable
+                local row = self:Row("DraggableRow", "InputForm", "Draggable", "Allows users to move the window with a mouse or touch device.")
+
+                row:Right():Toggle({
+                    Value = self.window.Draggable,
+                    ValueChanged = function(_self, value: boolean)
+                        self.window.Draggable = value
+                    end,
+                })
+            end
+
+            do -- Resizable
+                local row = self:Row("ResizableRow", "InputForm", "Resizable", "Allows users to resize the window with a mouse or touch device.")
+
+                row:Right():Toggle({
+                    Value = self.window.Resizable,
+                    ValueChanged = function(_self, value: boolean)
+                        self.window.Resizable = value
+                    end,
+                })
+            end
+        end
+
+        do -- Effects
+
+            do -- Dropshadow
+                local row = self:Row("DropshadowRow", "EffectsForm", "Dropshadow", "Enables a dropshadow effect on the window.")
+
+                row:Right():Toggle({
+                    Value = self.window.Dropshadow,
+                    ValueChanged = function(_self, value: boolean)
+                        self.window.Dropshadow = value
+                    end,
+                })
+            end
+
+            do -- UI Blur
+                local row = self:Row("UIBlurRow", "EffectsForm", "Background blur", "Enables a UI background blur effect on the window. This can be detectable in some games.")
+
+                row:Right():Toggle({
+                    Value = self.window.UIBlur,
+                    ValueChanged = function(_self, value: boolean)
+                        self.window.UIBlur = value
+                    end,
+                })
+            end
+        end
+    end
+end
+
 type property = {[string]: any}
 
 function Cassade:Section(sectionId: string, property: property?)
