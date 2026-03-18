@@ -117,7 +117,7 @@ end
 function Cassade:CreateSetting()
     do -- gui setting tab
         self:Section("Gui Appearance", {Disclosure = false, Title = "Gui Appearance"})
-            self:Tab("GuiSettingsTab", "MainFunctions", {Title = "GUI Setting", Icon = "http://www.roblox.com/asset/?id=70542492197391"})
+            self:Tab("GuiSettingsTab", "Gui Appearance", {Title = "GUI Setting", Icon = "http://www.roblox.com/asset/?id=70542492197391"})
                 self:Form("AppearanceForm", "GuiSettingsTab", {Title = "Appearance"})
                 self:Form("InputForm", "GuiSettingsTab", {Title = "Input"})
                 self:Form("EffectsForm", "GuiSettingsTab", {Title = "Effects", Subtitle = "These effects may be resource intensive across different systems."})
