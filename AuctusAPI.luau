@@ -95,7 +95,7 @@ function Cassade.new(title: string, collection: {any})
     --══════════════ set up window ══════════════════════
     local userInputService = cloneref and cloneref(game:GetService("UserInputService")) or game:GetService("UserInputService")
 
-    collection.app = CascadeLibrary.New({WindowPill = true, Theme = CascadeLibrary.Themes.Dark})
+    collection.app = CascadeLibrary.New({WindowPill = true, Theme = CascadeLibrary.Themes.Dark, Accent = CascadeLibrary.Accents.Red})
 
     local window = collection.app:Window({Title = title, Subtitle = "Apex Hub", Size = userInputService.TouchEnabled and UDim2.fromOffset(550, 325) or UDim2.fromOffset(850, 530)})
     self.window = window
