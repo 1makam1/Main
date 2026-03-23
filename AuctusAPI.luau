@@ -266,19 +266,19 @@ function Cassade:Section(sectionId: string, property: property?)
 end
 
 function Cassade:Tab(tabId: string, sectionId: string, property: property?)
-    self.Tabs[tabId] = {Title = property.Title, Object = self.Sections[sectionId]:Tab(property), Parent = self.Sections[sectionId]}
+    self.Tabs[tabId] = {ID = tabId, Title = property.Title, Object = self.Sections[sectionId]:Tab(property), Parent = self.Sections[sectionId]}
 
     return self.Tabs[tabId]
 end
 
 function Cassade:Form(formId: string, tabId: string, property: property?)
-    self.Forms[formId] = {Title = property.Title, Object = self.Tabs[tabId].Object:PageSection(property):Form(), Parent = self.Tabs[tabId]}
+    self.Forms[formId] = {ID = formId, Title = property.Title, Object = self.Tabs[tabId].Object:PageSection(property):Form(), Parent = self.Tabs[tabId]}
 
     return self.Forms[formId]
 end
 
 function Cassade:Row(rowId: string, formId: string, title: string, subtitle: string?)
-    self.Rows[rowId] = {Title = title, Object = self.Forms[formId].Object:Row({SearchIndex = title}), Parent = self.Forms[formId]}
+    self.Rows[rowId] = {ID = rowId, Title = title, Object = self.Forms[formId].Object:Row({SearchIndex = title}), Parent = self.Forms[formId]}
 
     self.Rows[rowId].Object:Left():TitleStack({Title = title, Subtitle = subtitle})
 
