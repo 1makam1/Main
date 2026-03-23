@@ -280,7 +280,7 @@ end
 function Cassade:Row(rowId: string, formId: string, title: string, subtitle: string?)
     self.Rows[rowId] = {Title = title, Object = self.Forms[formId].Object:Row({SearchIndex = title}), Parent = self.Forms[formId]}
 
-    self.Rows[rowId]:Left():TitleStack({Title = title, Subtitle = subtitle})
+    self.Rows[rowId].Object:Left():TitleStack({Title = title, Subtitle = subtitle})
 
     return self.Rows[rowId]
 end
