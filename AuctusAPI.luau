@@ -128,7 +128,7 @@ function Cassade.new(title: string, collection: {any})
     self.window.Dropshadow = if settings.Dropshadow ~= nil then settings.Dropshadow else true
     self.window.UIBlur = if settings.UIBlur ~= nil then settings.UIBlur else true
     self.collection.app.Theme = if settings.WhiteMode then self.cassade.Themes.Light else self.cassade.Themes.Dark
-    self.minimizeKeybind = settings.minimizeKeybind or Enum.KeyCode.RightControl
+    self.minimizeKeybind = settings.minimizeKeybind and Enum.KeyCode[settings.minimizeKeybind] or Enum.KeyCode.RightControl
     self.WhiteMode = settings.WhiteMode
 
     return self
@@ -254,7 +254,7 @@ function Cassade:UpdateSetting()
     settings.Dropshadow = self.window.Dropshadow
     settings.UIBlur = self.window.UIBlur
     settings.WhiteMode = self.WhiteMode
-    settings.minimizeKeybind = self.minimizeKeybind
+    settings.minimizeKeybind = tostring(self.minimizeKeybind):sub(14)
 
     writefile("Apex Hub Script/CassadeSettings.json", HttpService:JSONEncode(settings))
 end
