@@ -282,7 +282,7 @@ function Cassade:Row(rowId: string, formId: string, title: string, subtitle: str
 
     self.Rows[rowId].Object:Left():TitleStack({Title = title, Subtitle = subtitle})
 
-    return self.Rows[rowId]
+    return self.Rows[rowId].Object
 end
 
 -- fluent
