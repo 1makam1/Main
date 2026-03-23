@@ -74,7 +74,7 @@ end
 type Library = "Cassade" | "Fluent" | "WindUi"
 
 -- cassade
-local CascadeLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/Cassade.luau"))()
+local CascadeLibrary = loadstring(game:HttpGet("https://github.com/biggaboy212/Cascade/releases/latest/download/dist.luau"))()
 
 local Cassade = {}
 Cassade.__index = Cassade
