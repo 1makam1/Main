@@ -134,9 +134,9 @@ function Cassade.new(title: string, collection: {any})
     return self
 end
 
-function Cassade:CreateSetting(property: property)
-    self:Section("Gui Appearance", property)
-        self:Tab("GuiSettingsTab", "Gui Appearance", {Title = "GUI Setting", Icon = "http://www.roblox.com/asset/?id=70542492197391"})
+function Cassade:CreateSetting(sectionId: string, property: property)
+    self:Section(sectionId, property)
+        self:Tab("GuiSettingsTab", "Gui Appearance", {Title = "Gui Appearance", Icon = "http://www.roblox.com/asset/?id=70542492197391"})
             self:Form("AppearanceForm", "GuiSettingsTab", {Title = "Appearance"})
             self:Form("InputForm", "GuiSettingsTab", {Title = "Input"})
             self:Form("EffectsForm", "GuiSettingsTab", {Title = "Effects", Subtitle = "These effects may be resource intensive across different systems."})
