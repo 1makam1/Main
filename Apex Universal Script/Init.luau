@@ -92,6 +92,12 @@ local function InitAutoExecute()
 	local Player = game:GetService("Players").LocalPlayer
 	local TeleportCheck = false
 
+  if not Player then
+    InitAutoExecute()
+
+    return
+  end
+
 	Player.OnTeleport:Connect(function(State)
 		if (not TeleportCheck) and queueteleport then
 			TeleportCheck = true
