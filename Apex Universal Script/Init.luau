@@ -108,6 +108,15 @@ local function InitAutoExecute()
 	end)
 end
 
+local function AntiAFK()
+    local VirtualUser = game:GetService('VirtualUser')
+
+    game:GetService('Players').LocalPlayer.Idled:Connect(function()
+        VirtualUser:CaptureController()
+        VirtualUser:ClickButton2(Vector2.new())
+    end)
+end
+
 local function MakeSection(sectionName: string)
 	local section = Instance.new("TextLabel", List)
 	section.Name = sectionName
@@ -170,6 +179,7 @@ end
 
 InitContainer()
 InitAutoExecute()
+AntiAFK()
 
 MakeDivider()
 MakeSection("——— Universal ———")
