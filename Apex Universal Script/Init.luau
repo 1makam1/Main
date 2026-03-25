@@ -93,6 +93,8 @@ local function InitAutoExecute()
 	local TeleportCheck = false
 
   if not Player then
+	task.wait(0.1)
+
     InitAutoExecute()
 
     return
