@@ -1,5 +1,5 @@
 local studio = game:GetService("RunService"):IsStudio()
-local path = studio and script.Parent or game:GetService("CoreGui")
+local path = studio and game:GetService("Players").LocalPlayer.PlayerGui or game:GetService("CoreGui")
 local panel = path:FindFirstChild("Apex Universal Script")
 
 if panel then panel:Destroy() end
@@ -18,9 +18,9 @@ local function InitContainer()
 	local AspectRatio = Instance.new("UIAspectRatioConstraint", Container) 
 	local UICorner = Instance.new("UICorner", List)
 	local UIListLayout = Instance.new("UIListLayout", List)
-	
+
 	ScreenGui.Name = "Apex Universal Script"
-	
+
 	Container.Name = "Container"
 	Container.BackgroundTransparency = 1
 	Container.Position = UDim2.fromScale(0.089, 0.106)
@@ -40,30 +40,30 @@ local function InitContainer()
 	UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 	UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Top
 	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-	
+
 	local UIS = game:GetService("UserInputService")
 	local dragging
 	local offset
-	
+
 	local function ValidInput(input)
 		local input_type = input.UserInputType
-		
+
 		return input_type == Enum.UserInputType.MouseButton1 or input_type == Enum.UserInputType.Touch
 	end
-	
+
 	local function Drag()
 		if not dragging then return end
-		
+
 		local newinput = UIS.InputChanged:Wait()
 		local input_type = newinput.UserInputType
-		
+
 		if input_type == Enum.UserInputType.MouseMovement or input_type == Enum.UserInputType.Touch then
 			Container.Position = UDim2.fromOffset(newinput.Position.X + offset.X, newinput.Position.Y + offset.Y)
 		end
-		
+
 		Drag()
 	end
-	
+
 	Container.InputBegan:Connect(function(input)
 		if ValidInput(input) then
 			dragging = true
@@ -71,15 +71,15 @@ local function InitContainer()
 			Drag()
 		end
 	end)
-	
+
 	UIS.InputBegan:Connect(function(input, gpc)
 		if gpc then return end
-		
-		if input == Enum.KeyCode.LeftAlt then
+
+		if input.KeyCode == Enum.KeyCode.LeftAlt then
 			ScreenGui.Enabled = not ScreenGui.Enabled
 		end
 	end)
-	
+
 	UIS.InputEnded:Connect(function(input)
 		if ValidInput(input) then
 			dragging = false
@@ -92,13 +92,13 @@ local function InitAutoExecute()
 	local Player = game:GetService("Players").LocalPlayer
 	local TeleportCheck = false
 
-  if not Player then
-	task.wait(0.1)
+	if not Player then
+		task.wait(0.1)
 
-    InitAutoExecute()
+		InitAutoExecute()
 
-    return
-  end
+		return
+	end
 
 	Player.OnTeleport:Connect(function(State)
 		if (not TeleportCheck) and queueteleport then
@@ -109,12 +109,12 @@ local function InitAutoExecute()
 end
 
 local function AntiAFK()
-    local VirtualUser = game:GetService('VirtualUser')
+	local VirtualUser = game:GetService('VirtualUser')
 
-    game:GetService('Players').LocalPlayer.Idled:Connect(function()
-        VirtualUser:CaptureController()
-        VirtualUser:ClickButton2(Vector2.new())
-    end)
+	game:GetService('Players').LocalPlayer.Idled:Connect(function()
+		VirtualUser:CaptureController()
+		VirtualUser:ClickButton2(Vector2.new())
+	end)
 end
 
 local function MakeSection(sectionName: string)
@@ -138,13 +138,13 @@ end
 
 local function MakeButton(buttonName: string, color: "Green" | "Yellow" | "Red")
 	color = Colors[color] or Colors.Green
-	
+
 	local button_frame = Instance.new("Frame", List)
 	button_frame.Name = buttonName
 	button_frame.BackgroundTransparency = 1
 	button_frame.LayoutOrder = #List:GetChildren() - 3
 	button_frame.Size = UDim2.fromScale(1, 0.191)
-	
+
 	local button = Instance.new("TextButton", button_frame)
 	button.Text = buttonName
 	button.BackgroundColor3 = Color3.fromRGB(color.R, color.G, color.B)
@@ -154,21 +154,21 @@ local function MakeButton(buttonName: string, color: "Green" | "Yellow" | "Red")
 	button.FontFace = Font.fromName("Nunito", Enum.FontWeight.Bold)
 	button.TextColor3 = Color3.fromRGB(color.R*4.5, color.G*4.5, color.B*4.5)
 	button.TextScaled = true
-	
+
 	local button_coner = Instance.new("UICorner", button)
 	button_coner.CornerRadius = UDim.new(0.3, 0)
-	
+
 	local button_padding = Instance.new("UIPadding", button)
 	button_padding.PaddingBottom = UDim.new(0.2, 0)
 	button_padding.PaddingTop = UDim.new(0.2, 0)
-	
+
 	local button_stroke = Instance.new("UIStroke", button)
 	button_stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	button_stroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
 	button_stroke.Color = Color3.fromRGB(color.R*2, color.G*2, color.B*2)
 	button_stroke.StrokeSizingMode = Enum.StrokeSizingMode.ScaledSize
 	button_stroke.Thickness = 0.05
-	
+
 	task.spawn(function()
 		local file = "https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/Apex%20Universal%20Script/"..buttonName:gsub(" ", "%%20")..".luau"
 		local func = loadstring(game:HttpGet(file))
