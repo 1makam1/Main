@@ -196,7 +196,6 @@ MakeSection("——— Remote Spy ———")
 MakeButton("Cobalt")
 MakeButton("Hydroxide")
 MakeButton("Simple Spy")
-MakeButton("Sigma Spy")
 
 MakeDivider()
 MakeSection("———— Player ————")
