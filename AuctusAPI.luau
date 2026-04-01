@@ -55,16 +55,28 @@ end
 -- ═══════════════════════════════════════════════════════════════
 -- 🗝️ KEY SYSTEM
 -- ═══════════════════════════════════════════════════════════════
-local JunkieKeySystem = loadstring(game:HttpGet("https://junkie-development.de/sdk/JunkieKeySystem.lua"))()
+local JunkieKeySystem = (loadstring(game:HttpGet("https://junkie-development.de/sdk/JunkieKeySystem.lua")) or function() return end)()
 local API_KEY = "2383bf96-9085-4015-b6f9-476b19ffe24d"
 local SERVICE = "Get Key!"
 local PROVIDER = "Get Key!"
 
 function AuctusAPI:GetKeyLink(): string
+    if not JunkieKeySystem then
+        warn("JunkieKeySystem failed to load")
+
+        return
+    end
+
     return JunkieKeySystem.getLink(API_KEY, PROVIDER, SERVICE)
 end
 
 function AuctusAPI:ValidateKey(key: string): boolean
+    if not JunkieKeySystem then
+        warn("JunkieKeySystem failed to load")
+
+        return
+    end
+
     return JunkieKeySystem.verifyKey(API_KEY, key, SERVICE)
 end
 
