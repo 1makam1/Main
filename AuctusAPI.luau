@@ -55,29 +55,260 @@ end
 -- ═══════════════════════════════════════════════════════════════
 -- 🗝️ KEY SYSTEM
 -- ═══════════════════════════════════════════════════════════════
-local JunkieKeySystem = (loadstring(game:HttpGet("https://junkie-development.de/sdk/JunkieKeySystem.lua")) or function() return end)()
+local JunkieKeySystem = loadstring(game:HttpGet("https://junkie-development.de/sdk/JunkieKeySystem.lua"))()
 local API_KEY = "2383bf96-9085-4015-b6f9-476b19ffe24d"
 local SERVICE = "Get Key!"
 local PROVIDER = "Get Key!"
 
 function AuctusAPI:GetKeyLink(): string
-    if not JunkieKeySystem then
-        warn("JunkieKeySystem failed to load")
-
-        return
-    end
-
     return JunkieKeySystem.getLink(API_KEY, PROVIDER, SERVICE)
 end
 
 function AuctusAPI:ValidateKey(key: string): boolean
-    if not JunkieKeySystem then
-        warn("JunkieKeySystem failed to load")
+    return JunkieKeySystem.verifyKey(API_KEY, key, SERVICE)
+end
 
+function AuctusAPI.MakeKeyPopup()
+
+    if not isfile("Apex Hub Script/Key.txt") then
+        makefolder("Apex Hub Script")
+        writefile("Apex Hub Script/Key.txt", "")
+    end
+
+    if AuctusAPI:ValidateKey(readfile("Apex Hub Script/Key.txt")) == true then
         return
     end
 
-    return JunkieKeySystem.verifyKey(API_KEY, key, SERVICE)
+	local KeyPopup = Instance.new("ScreenGui")
+	local Body = Instance.new("Frame")
+	local ContentBody = Instance.new("Frame")
+	local UICorner = Instance.new("UICorner")
+	local Toolbar = Instance.new("Frame")
+	local WindowControls = Instance.new("Frame")
+	local UIListLayout = Instance.new("UIListLayout")
+	local UIPadding = Instance.new("UIPadding")
+	local Exit = Instance.new("ImageButton")
+	local Stroke = Instance.new("ImageLabel")
+	local Icon = Instance.new("ImageLabel")
+	local Form = Instance.new("Frame")
+	local UICorner_2 = Instance.new("UICorner")
+	local TextBox = Instance.new("TextBox")
+	local CheckKey = Instance.new("TextButton")
+	local UICorner_3 = Instance.new("UICorner")
+	local GetKey = Instance.new("TextButton")
+	local UICorner_4 = Instance.new("UICorner")
+	local Dropshadow = Instance.new("ImageLabel")
+
+    do
+        KeyPopup.Name = "KeyPopup"
+        KeyPopup.Parent = game:GetService("CoreGui")
+        KeyPopup.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        KeyPopup.DisplayOrder = 200
+        KeyPopup.ResetOnSpawn = false
+
+        Body.Name = "Body"
+        Body.Parent = KeyPopup
+        Body.AnchorPoint = Vector2.new(0.5, 0.5)
+        Body.BackgroundColor3 = Color3.fromRGB(32, 32, 35)
+        Body.BackgroundTransparency = 1.000
+        Body.BorderSizePixel = 0
+        Body.Position = UDim2.new(0.499187052, 0, 0.498972088, 0)
+        Body.Size = UDim2.new(0, 314, 0, 141)
+
+        ContentBody.Name = "ContentBody"
+        ContentBody.Parent = Body
+        ContentBody.AnchorPoint = Vector2.new(0.5, 0.5)
+        ContentBody.BackgroundColor3 = Color3.fromRGB(28, 28, 30)
+        ContentBody.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        ContentBody.BorderSizePixel = 0
+        ContentBody.ClipsDescendants = true
+        ContentBody.LayoutOrder = 2
+        ContentBody.Position = UDim2.new(0.5, 0, 0.5, 0)
+        ContentBody.Size = UDim2.new(1, 0, 1, 0)
+
+        UICorner.CornerRadius = UDim.new(0, 10)
+        UICorner.Parent = ContentBody
+
+        Toolbar.Name = "Toolbar"
+        Toolbar.Parent = ContentBody
+        Toolbar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        Toolbar.BackgroundTransparency = 1.000
+        Toolbar.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        Toolbar.BorderSizePixel = 0
+        Toolbar.Size = UDim2.new(1, 0, -0.160460994, 52)
+
+        WindowControls.Name = "WindowControls"
+        WindowControls.Parent = Toolbar
+        WindowControls.AnchorPoint = Vector2.new(0, 0.5)
+        WindowControls.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        WindowControls.BackgroundTransparency = 1.000
+        WindowControls.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        WindowControls.BorderSizePixel = 0
+        WindowControls.Position = UDim2.new(0, 0, 0.5, 0)
+        WindowControls.Size = UDim2.new(0, 69, 0, 38)
+
+        UIListLayout.Parent = WindowControls
+        UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+        UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+        UIListLayout.Padding = UDim.new(0, 8)
+
+        UIPadding.Parent = WindowControls
+        UIPadding.PaddingLeft = UDim.new(0, 10)
+        UIPadding.PaddingRight = UDim.new(0, 20)
+
+        Exit.Name = "Exit"
+        Exit.Parent = WindowControls
+        Exit.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        Exit.BackgroundTransparency = 1.000
+        Exit.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        Exit.BorderSizePixel = 0
+        Exit.Size = UDim2.new(0, 12, 0, 12)
+        Exit.AutoButtonColor = false
+        Exit.Image = "rbxassetid://132228700346004"
+        Exit.ImageColor3 = Color3.fromRGB(255, 95, 87)
+
+        Stroke.Name = "Stroke"
+        Stroke.Parent = Exit
+        Stroke.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        Stroke.BackgroundTransparency = 1.000
+        Stroke.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        Stroke.BorderSizePixel = 0
+        Stroke.Size = UDim2.new(1, 0, 1, 0)
+        Stroke.Image = "rbxassetid://94763505860483"
+        Stroke.ImageTransparency = 0.900
+
+        Icon.Name = "Icon"
+        Icon.Parent = Exit
+        Icon.AnchorPoint = Vector2.new(0.5, 0.5)
+        Icon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        Icon.BackgroundTransparency = 1.000
+        Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        Icon.BorderSizePixel = 0
+        Icon.Position = UDim2.new(0.5, 0, 0.5, 0)
+        Icon.Size = UDim2.new(1, 0, 1, 0)
+        Icon.Visible = false
+        Icon.Image = "rbxassetid://94781753558308"
+        Icon.ImageColor3 = Color3.fromRGB(0, 0, 0)
+        Icon.ImageTransparency = 0.500
+
+        Form.Name = "Form"
+        Form.Parent = ContentBody
+        Form.BackgroundColor3 = Color3.fromRGB(31, 31, 33)
+        Form.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        Form.BorderSizePixel = 0
+        Form.Position = UDim2.new(0.0500000007, 0, 0.208333328, 0)
+        Form.Size = UDim2.new(0.899999976, 0, 0.241134748, 0)
+        Form.ZIndex = 0
+
+        UICorner_2.CornerRadius = UDim.new(0, 6)
+        UICorner_2.Parent = Form
+
+        TextBox.Parent = Form
+        TextBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        TextBox.BackgroundTransparency = 1.000
+        TextBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        TextBox.BorderSizePixel = 0
+        TextBox.Position = UDim2.new(0.05, 0, 0.25, 0)
+        TextBox.Size = UDim2.new(0.9, 0, 0.5, 0)
+        TextBox.Font = Enum.Font.Unknown
+        TextBox.PlaceholderColor3 = Color3.fromRGB(159, 159, 159)
+        TextBox.PlaceholderText = "key..."
+        TextBox.Text = ""
+        TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+        TextBox.TextSize = 15.000
+        TextBox.TextScaled = true
+
+        CheckKey.Name = "CheckKey"
+        CheckKey.Parent = ContentBody
+        CheckKey.Active = false
+        CheckKey.BackgroundColor3 = Color3.fromRGB(31, 31, 33)
+        CheckKey.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        CheckKey.BorderSizePixel = 0
+        CheckKey.Position = UDim2.new(0.540012062, 0, 0.589538991, 0)
+        CheckKey.Selectable = false
+        CheckKey.Size = UDim2.new(0.407000005, 0, 0.298000008, 0)
+        CheckKey.Font = Enum.Font.Unknown
+        CheckKey.Text = "Submit"
+        CheckKey.TextColor3 = Color3.fromRGB(255, 255, 255)
+        CheckKey.TextSize = 15.000
+        CheckKey.TextTransparency = 0.450
+
+        UICorner_3.CornerRadius = UDim.new(0, 6)
+        UICorner_3.Parent = CheckKey
+
+        GetKey.Name = "GetKey"
+        GetKey.Parent = ContentBody
+        GetKey.Active = false
+        GetKey.BackgroundColor3 = Color3.fromRGB(31, 31, 33)
+        GetKey.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        GetKey.BorderSizePixel = 0
+        GetKey.Position = UDim2.new(0.0495661832, 0, 0.589538991, 0)
+        GetKey.Selectable = false
+        GetKey.Size = UDim2.new(0.407141238, 0, 0.297872335, 0)
+        GetKey.Font = Enum.Font.Unknown
+        GetKey.Text = "GetKey"
+        GetKey.TextColor3 = Color3.fromRGB(255, 255, 255)
+        GetKey.TextSize = 15.000
+        GetKey.TextTransparency = 0.450
+
+        UICorner_4.CornerRadius = UDim.new(0, 6)
+        UICorner_4.Parent = GetKey
+
+        Dropshadow.Name = "Dropshadow"
+        Dropshadow.Parent = Body
+        Dropshadow.AnchorPoint = Vector2.new(0.5, 0.5)
+        Dropshadow.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        Dropshadow.BackgroundTransparency = 1.000
+        Dropshadow.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        Dropshadow.BorderSizePixel = 0
+        Dropshadow.Position = UDim2.new(0.5, 0, 0.5, 3)
+        Dropshadow.Size = UDim2.new(1, 24, 1, 24)
+        Dropshadow.ZIndex = 0
+        Dropshadow.Image = "rbxassetid://138260268144845"
+        Dropshadow.ImageTransparency = 0.650
+        Dropshadow.ScaleType = Enum.ScaleType.Slice
+        Dropshadow.SliceCenter = Rect.new(28, 26, 96, 94)
+    end
+
+    local key_signal = Instance.new("BindableEvent")
+	local connects = {}
+
+	local function EndPopupKey()
+        KeyPopup:Destroy()
+        key_signal:Destroy()
+
+		for _, v in connects do
+			v:Disconnect()
+		end
+	end
+
+	local getcon = GetKey.MouseButton1Click:Connect(function()
+		local link = AuctusAPI:GetKeyLink()
+		setclipboard(link)
+	end)
+
+	local checkcon = CheckKey.MouseButton1Click:Connect(function()
+        local key = TextBox.Text
+		local isValid = AuctusAPI:ValidateKey(key)
+
+		if isValid == true then
+            writefile("Apex Hub Script/Key.txt", key)
+            key_signal:Fire(true)
+            EndPopupKey()
+        end
+	end)
+
+	local exitcon = Exit.MouseButton1Click:Connect(function()
+		key_signal:Fire(false)
+        EndPopupKey()
+	end)
+
+	table.insert(connects, getcon)
+	table.insert(connects, checkcon)
+	table.insert(connects, exitcon)
+
+    return key_signal.Event:Wait()
 end
 
 -- ═══════════════════════════════════════════════════════════════
