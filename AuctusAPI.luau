@@ -6,17 +6,16 @@ local HttpService = game:GetService("HttpService")
 -- ⌨️ INPUT SIMULATION
 -- ═══════════════════════════════════════════════════════════════
 local GuiService = game:GetService("GuiService")
+local VIM = game:GetService("VirtualInputManager")
 
-function AuctusAPI:SendKey(key: Enum.KeyCode)
+function AuctusAPI:SendKey(key: Enum.KeyCode | string)
     local string_key = tostring(key)
 
-    if not string_key or not string_key:match("Enum.KeyCode.") then
-        warn("invalid argument Enum.KeyCode expected")
+    if not string_key or (not string_key:match("Enum.KeyCode.") and type(key) ~= "string") then
+        warn("key must be Enum.KeyCode or string")
 
         return
     end
-
-    local VIM = game:GetService("VirtualInputManager")
 
     VIM:SendKeyEvent(false, key, false, game)
     task.wait()
