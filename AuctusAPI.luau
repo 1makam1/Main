@@ -17,11 +17,13 @@ function AuctusAPI:SendKey(key: Enum.KeyCode | string, duration: number?)
         return
     end
 
-    VIM:SendKeyEvent(false, key, false, game)
-    task.wait()
-    VIM:SendKeyEvent(true, key, false, game)
-    task.wait(duration)
-    VIM:SendKeyEvent(false, key, false, game)
+	task.spawn(function()
+		VIM:SendKeyEvent(false, key, false, game)
+	    task.wait()
+	    VIM:SendKeyEvent(true, key, false, game)
+	    task.wait(duration)
+	    VIM:SendKeyEvent(false, key, false, game)
+	end)
 end
 
 function AuctusAPI:ClickButton(btn: GuiButton)
