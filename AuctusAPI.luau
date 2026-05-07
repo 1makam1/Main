@@ -8,7 +8,7 @@ local HttpService = game:GetService("HttpService")
 local GuiService = game:GetService("GuiService")
 local VIM = game:GetService("VirtualInputManager")
 
-function AuctusAPI:SendKey(key: Enum.KeyCode | string)
+function AuctusAPI:SendKey(key: Enum.KeyCode | string, duration: number?)
     local string_key = tostring(key)
 
     if not string_key or (not string_key:match("Enum.KeyCode.") and type(key) ~= "string") then
@@ -20,7 +20,7 @@ function AuctusAPI:SendKey(key: Enum.KeyCode | string)
     VIM:SendKeyEvent(false, key, false, game)
     task.wait()
     VIM:SendKeyEvent(true, key, false, game)
-    task.wait()
+    task.wait(duration)
     VIM:SendKeyEvent(false, key, false, game)
 end
 
