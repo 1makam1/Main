@@ -21,6 +21,10 @@ return function<object, attach>(obj: object, objOrInstance: attach): object & at
 
 		return instValue
 	end
+	
+	mt.__tostring = function()
+		return tostring(objOrInstance)
+	end
 
 	return setmetatable(obj, mt) :: object & attach
 end
