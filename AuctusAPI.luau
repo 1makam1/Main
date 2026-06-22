@@ -8,22 +8,20 @@ local HttpService = game:GetService("HttpService")
 local GuiService = game:GetService("GuiService")
 local VIM = game:GetService("VirtualInputManager")
 
-function AuctusAPI:SendKey(key: Enum.KeyCode | string, duration: number?)
+function AuctusAPI:SendKey(key: Enum.KeyCode)
     local string_key = tostring(key)
 
-    if not string_key or (not string_key:match("Enum.KeyCode.") and type(key) ~= "string") then
-        warn("key must be Enum.KeyCode or string")
+    if not string_key or not string_key:match("Enum.KeyCode.") then
+        warn("invalid argument Enum.KeyCode expected")
 
         return
     end
 
-	task.spawn(function()
-		VIM:SendKeyEvent(false, key, false, game)
-	    task.wait()
-	    VIM:SendKeyEvent(true, key, false, game)
-	    task.wait(duration)
-	    VIM:SendKeyEvent(false, key, false, game)
-	end)
+    VIM:SendKeyEvent(false, key, false, game)
+    task.wait()
+    VIM:SendKeyEvent(true, key, false, game)
+    task.wait()
+    VIM:SendKeyEvent(false, key, false, game)
 end
 
 function AuctusAPI:ClickButton(btn: GuiButton)
@@ -61,6 +59,26 @@ local API_KEY = "2383bf96-9085-4015-b6f9-476b19ffe24d"
 local SERVICE = "Get Key!"
 local PROVIDER = "Get Key!"
 
+local KeySystem = {}
+KeySystem.__index = KeySystem
+
+function AuctusAPI.newKeySystem(apiKey: string, serviceName: string, providerName: string)
+    return setmetatable({
+        ApiKey = apiKey,
+        Service = serviceName,
+        Provider = providerName
+    }, KeySystem)
+end
+
+function KeySystem:GetLink()
+    return JunkieKeySystem.getLink(self.ApiKey, self.Service, self.Provider)
+end
+
+function KeySystem:ValidateKey(key: string): boolean
+    return JunkieKeySystem.verifyKey(self.ApiKey, key, self.Service)
+end
+
+--- old
 function AuctusAPI:GetKeyLink(): string
     return JunkieKeySystem.getLink(API_KEY, PROVIDER, SERVICE)
 end
@@ -505,27 +523,22 @@ end
 
 function Cassade:Section(sectionId: string, property: property?)
     self.Sections[sectionId] = self.window:Section(property)
-
     return self.Sections[sectionId]
 end
 
 function Cassade:Tab(tabId: string, sectionId: string, property: property?)
     self.Tabs[tabId] = {ID = tabId, Title = property.Title, Object = self.Sections[sectionId]:Tab(property), Parent = self.Sections[sectionId]}
-
     return self.Tabs[tabId]
 end
 
 function Cassade:Form(formId: string, tabId: string, property: property?)
     self.Forms[formId] = {ID = formId, Title = property.Title, Object = self.Tabs[tabId].Object:PageSection(property):Form(), Parent = self.Tabs[tabId]}
-
     return self.Forms[formId]
 end
 
 function Cassade:Row(rowId: string, formId: string, title: string, subtitle: string?)
     self.Rows[rowId] = {ID = rowId, Title = title, Object = self.Forms[formId].Object:Row({SearchIndex = title}), Parent = self.Forms[formId]}
-
     self.Rows[rowId].Object:Left():TitleStack({Title = title, Subtitle = subtitle})
-
     return self.Rows[rowId].Object
 end
 
@@ -538,6 +551,10 @@ function AuctusAPI.CreateApp(library: Library, title: string, collection: {any})
         return Cassade.new(title, collection)
     end
 end
+
+-- WindUI
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+
 
 -- ═══════════════════════════════════════════════════════════════
 -- 🛠️ UTILITY FUNCTIONS
