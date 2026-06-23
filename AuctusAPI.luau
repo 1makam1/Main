@@ -71,7 +71,7 @@ function AuctusAPI.newKeySystem(apiKey: string, serviceName: string, providerNam
 end
 
 function KeySystem:GetLink()
-    return JunkieKeySystem.getLink(self.ApiKey, self.Service, self.Provider)
+    return JunkieKeySystem.getLink(self.ApiKey, self.Provider, self.Service)
 end
 
 function KeySystem:ValidateKey(key: string): boolean
