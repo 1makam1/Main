@@ -291,8 +291,8 @@ function ConfigManager:CreateConfig(configFilename, autoload)
         if success and configData and configData.__autoload then
             ConfigModule.AutoLoad = true
             
-            task.spawn(function()
-                task.wait(0.5)
+            -- task.spawn(function()
+            --     task.wait(0.5)
                 local success, result = pcall(function()
                     return ConfigModule:Load()
                 end)
@@ -301,10 +301,9 @@ function ConfigManager:CreateConfig(configFilename, autoload)
                 else
                     warn("[ WindUI.ConfigManager ] Failed to AutoLoad config: " .. configFilename .. " - " .. tostring(result))
                 end
-            end)
+           --end)
         end
     end
-    
     
     ConfigModule:SetAsCurrent()
     ConfigManager.Configs[configFilename] = ConfigModule
