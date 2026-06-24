@@ -284,25 +284,26 @@ function ConfigManager:CreateConfig(configFilename, autoload)
     
     
     if isfile(ConfigModule.Path) then
-        local success, configData = pcall(function()
-            return HttpService:JSONDecode(readfile(ConfigModule.Path))
-        end)
+        -- local success, configData = pcall(function()
+        --     return HttpService:JSONDecode(readfile(ConfigModule.Path))
+        -- end)
         
-        if success and configData and configData.__autoload then
-            ConfigModule.AutoLoad = true
+        -- if success and configData and configData.__autoload then
+        --     ConfigModule.AutoLoad = true
             
-            -- task.spawn(function()
-            --     task.wait(0.5)
-                local success, result = pcall(function()
-                    return ConfigModule:Load()
-                end)
-                if success then
-                    if Window.Debug then print("[ WindUI.ConfigManager ] AutoLoaded config: " .. configFilename) end
-                else
-                    warn("[ WindUI.ConfigManager ] Failed to AutoLoad config: " .. configFilename .. " - " .. tostring(result))
-                end
-           --end)
-        end
+        --     -- task.spawn(function()
+        --     --     task.wait(0.5)
+        --         local success, result = pcall(function()
+        --             return ConfigModule:Load()
+        --         end)
+        --         if success then
+        --             if Window.Debug then print("[ WindUI.ConfigManager ] AutoLoaded config: " .. configFilename) end
+        --         else
+        --             warn("[ WindUI.ConfigManager ] Failed to AutoLoad config: " .. configFilename .. " - " .. tostring(result))
+        --         end
+        --    --end)
+        -- end
+        ConfigModule:Load()
     end
     
     ConfigModule:SetAsCurrent()
