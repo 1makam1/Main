@@ -542,19 +542,344 @@ function Cassade:Row(rowId: string, formId: string, title: string, subtitle: str
     return self.Rows[rowId].Object
 end
 
--- fluent
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-local WindUi = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
-
-function AuctusAPI.CreateApp(library: Library, title: string, collection: {any})
-    if library == "Cassade" then
-        return Cassade.new(title, collection)
-    end
-end
 
 -- WindUI
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+local ConfigManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/ConfigManager.luau"))()
+WindUI:SetNotificationLower(true)
 
+local WindUIClass = {}
+WindUIClass.__index = WindUIClass
+
+function WindUIClass.new(customProperty: {[string]: any}, services: {[string]: {any}})
+    local windowProperty = {
+        Title = "None",
+        Icon = "rbxassetid://99869488000539",
+        Author = "Apex Hub Fremium",
+        Folder = "Apex None",
+
+        -- Optional
+        Size = UDim2.fromOffset(580, 460),
+        MinSize = Vector2.new(560, 350),
+        MaxSize = Vector2.new(850, 560),
+        ToggleKey = Enum.KeyCode.RightControl,
+        Transparent = true,
+        Theme = "Dark",
+        Resizable = true,
+        SideBarWidth = 150,
+        BackgroundImageTransparency = 0.42,
+        HideSearchBar = false,
+        ScrollBarEnabled = true,
+
+        -- Optional
+        -- KeySystem = { 
+        --     Note = "Get key from link to continue.",
+        --     SaveKey = true,
+        --     API = {{Type = "Lootlabs"}}
+        -- }
+    }
+    for prop, value in customProperty do
+        windowProperty[prop] = value
+    end
+    for serviceName, service in services do
+        WindUI.Services[serviceName] = service
+    end
+
+    local Window = WindUI:CreateWindow(windowProperty)
+
+    function Window:CreateElement(elementId: string, object: {any}, method: string, ...: any)
+        self[elementId] = object[method](object, ...)
+    end
+
+    function Window:SetSearchEnabled(enable: boolean)
+        self.HideSearchBar = not enable
+        for _, c in self.Parent:GetChildren() do
+            local childCount = #c:GetChildren()
+            if childCount < 3 then continue end
+            for _, c2 in c.Main:GetChildren() do
+                if not c2:FindFirstChild("ScrollingFrame") then continue end
+                c2.ScrollingFrame.Size = UDim2.new(1, 0, 1, enable and -45 or 0)
+                c2.TextButton.Visible = enable
+                return
+            end
+        end
+    end
+
+    function Window:SetScrollBarEnabled(enable: boolean)
+        self.ScrollBarVisible = enable
+        for _, c in self.Parent:GetChildren() do
+            local childCount = #c:GetChildren()
+            if childCount < 3 then continue end
+            for _, c2 in c.Main:GetChildren() do
+                if not c2:FindFirstChild("Background") then continue end
+                task.spawn(function()
+                    for _, c3 in c2:WaitForChild("Frame"):GetChildren() do
+                        childCount = #c3:GetChildren()
+                        if childCount ~= 1 then continue end
+                        c3.Visible = enable
+                        return
+                    end
+                end)
+                return
+            end
+        end
+    end
+
+    function Window:SetResizable(enable: boolean)
+        self.Resizable = enable
+        for _, c in self.Parent:GetChildren() do
+            local childCount = #c:GetChildren()
+            if childCount < 3 then continue end
+            c:FindFirstChild("Background").Frame.Visible = enable
+            return
+        end
+    end
+
+    Window.ConfigManager = ConfigManager
+    Window.ConfigManager:Init(Window)
+    Window:SetSearchEnabled(false)
+    Window:SetScrollBarEnabled(false)
+    Window:SetResizable(true)
+    Window:SetIconSize(40)
+    WindUI:SetTheme("Crimson")
+    Window:SetToggleKey(Enum.KeyCode.LeftAlt)
+    Window:EditOpenButton({
+        Title = "Apex Hub",
+        Icon = "rbxassetid://99869488000539",
+        CornerRadius = UDim.new(0,16),
+        StrokeThickness = 1.5,
+        Color = ColorSequence.new(
+            Color3.fromRGB(150, 0, 0)
+        ),
+        OnlyMobile = false,
+        Enabled = true,
+        Draggable = true,
+    })
+
+    local self = setmetatable({}, WindUIClass)
+    self.Window = Window
+    self.WindUI = WindUI
+    self.ConfigManager = ConfigManager
+
+    return self, WindUI, Window
+end
+
+function WindUIClass:WindowConfigTab(windowOrTabsection: any)
+    local Window = self.Window
+
+    -- tab
+    Window:CreateElement("WindowSettingsTab", windowOrTabsection, "Tab", {
+    Title = "Window",
+    Icon = "app-window",
+    })
+
+    -- Config
+    Window:CreateElement("ConfigSection", Window.WindowSettingsTab, "Section", { 
+        Title = "Config",
+        Box = true,
+        TextTransparency = 0.3,
+        TextXAlignment = "Center",
+        TextSize = 20,
+        Opened = true,
+    })
+    Window:CreateElement("ConfigNamText", Window.ConfigSection, "Input", {
+        Title = "Config Name",
+        Placeholder = "Config...",
+    })
+    Window:CreateElement("SaveConfigBtn", Window.ConfigSection, "Button", {
+        Title = "Save Config",
+        Callback = function()
+            local configName = Window.ConfigNamText.Value
+            if configName == "" then return end
+            local config = Window.ConfigManager:GetConfig(configName)
+            local running
+            if config then
+                running = coroutine.running()
+                Window:Dialog({
+                    Icon = "info",
+                    Title = "This config already exist, do you want to replace?",
+                    Content = 'Click "Replace" to save the config.',
+                    Buttons = {
+                        {
+                            Title = "Cancel",
+                            Variant = "Secondary",
+                            Callback = function() task.spawn(running, false) end
+                        },
+                        {
+                            Title = "Replace",
+                            Callback = function() task.spawn(running, true) end
+                        }
+                    }
+                })
+            end
+            local canSave = if running then coroutine.yield() else true
+            if not canSave then return end
+            config = Window.ConfigManager:Config(configName)
+            config:Set("Theme", WindUI:GetCurrentTheme())
+            config:Set("Transparent", WindUI:GetTransparency())
+            config:Set("MinimizeKey", tostring(Window.ToggleKey):sub(14))
+            config:Set("SearchBarEnabled", not Window.HideSearchBar)
+            config:Set("ScrollBarEnabled", Window.ScrollBarVisible)
+            config:Set("Resizable", Window.Resizable)
+            config:Save()
+            local allConfigs = {}
+            for _config, _ in Window.ConfigManager.Configs do
+                table.insert(allConfigs, _config)
+            end
+            Window.ConfigDropdown:Refresh(allConfigs)
+        end
+    })
+    Window:CreateElement("ConfigDropdown", Window.ConfigSection, "Dropdown", {
+        Title = "Select Config",
+        Values = (function()
+            local allConfigs = {}
+            for _config, _ in Window.ConfigManager.Configs do
+                table.insert(allConfigs, _config)
+            end
+            return allConfigs
+        end)(),
+        Callback = function() return end
+    })
+    Window:CreateElement("LoadConfigBtn", Window.ConfigSection, "Button", {
+        Title = "Load Config",
+        Callback = function()
+            local configName = Window.ConfigDropdown.Value
+            if not configName then return end
+            if configName == "" then return end
+            local config = Window.ConfigManager:GetConfig(configName)
+            if not config then return end
+            local settings = config.CustomData
+            WindUI:SetTheme(settings.Theme)
+            Window.ThemeDropdown:Select(settings.Theme)
+            Window:ToggleTransparency(settings.Transparent)
+            Window.TransparentToggle:Set(settings.Transparent)
+            Window:SetToggleKey(Enum.KeyCode[settings.MinimizeKey or "RightControl"])
+            Window.MinimizeKeyKeyBind:Set(settings.MinimizeKey or "RightControl")
+            Window:SetSearchEnabled(settings.SearchBarEnabled)
+            Window.SearchBarToggle:Set(settings.SearchBarEnabled)
+            Window:SetScrollBarEnabled(settings.ScrollBarEnabled)
+            Window.ScrollBarToggle:Set(settings.ScrollBarEnabled)
+            Window:SetResizable(settings.Resizable)
+            Window.ResizableToggle:Set(settings.Resizable)
+        end
+    })
+    Window:CreateElement("DelConfigBtn", Window.ConfigSection, "Button", {
+        Title = "Delete Config",
+        Callback = function()
+            local configName = Window.ConfigDropdown.Value
+            if not configName then return end
+            if configName == "" then return end
+            local config = Window.ConfigManager:GetConfig(configName)
+            if not config then return end
+            Window:Dialog({
+                Icon = "info",
+                Title = "Are you sure you want to delete this config!",
+                Content = 'Click "Confirm" to delete the config.',
+                Buttons = {
+                    {
+                        Title = "Cancel",
+                        Variant = "Secondary",
+                        Callback = function() return end
+                    },
+                    {
+                        Title = "Confirm",
+                        Callback = function()
+                            config:Delete()
+                            local allConfigs = {}
+                            for _config, _ in Window.ConfigManager.Configs do
+                                table.insert(allConfigs, _config)
+                            end
+                            Window.ConfigDropdown:Refresh(allConfigs)
+                            Window.ConfigDropdown:Select()
+                        end
+                    }
+                }
+            })
+        end
+    })
+
+    -- Apearence
+    Window:CreateElement("AppearanceSection", Window.WindowSettingsTab, "Section", { 
+        Title = "Appearance",
+        Box = true,
+        TextTransparency = 0.3,
+        TextXAlignment = "Center",
+        TextSize = 20,
+        Opened = true,
+    })
+    Window:CreateElement("ThemeDropdown", Window.AppearanceSection, "Dropdown", {
+        Title = "Theme",
+        Values = (function()
+            local themes = {}
+            for theme, _ in WindUI:GetThemes() do
+                table.insert(themes, theme)
+            end
+            return themes
+        end)(),
+        Value = WindUI:GetCurrentTheme(),
+        Callback = function(option) 
+            WindUI:SetTheme(option)
+        end
+    })
+    Window:CreateElement("TransparentToggle", Window.AppearanceSection, "Toggle", {
+        Title = "Transparent",
+        Value = WindUI:GetTransparency(),
+        Callback = function(state)
+            Window:ToggleTransparency(state)
+        end
+    })
+
+    -- Window
+    Window:CreateElement("WindowSection", Window.WindowSettingsTab, "Section", { 
+        Title = "Window",
+        Box = true,
+        TextTransparency = 0.3,
+        TextXAlignment = "Center",
+        TextSize = 20,
+        Opened = true,
+    })
+    Window:CreateElement("MinimizeKeyKeyBind", Window.WindowSection, "Keybind", {
+        Title = "Minimize Key",
+        Value = tostring(Window.ToggleKey):sub(14),
+        Callback = function(key)
+            Window:SetToggleKey(Enum.KeyCode[key])
+        end
+    })
+    Window:CreateElement("SearchBarToggle", Window.WindowSection, "Toggle", {
+        Title = "Search Bar Enabled",
+        Value = not Window.HideSearchBar,
+        Callback = function(...)
+            Window:SetSearchEnabled(...)
+        end
+    })
+    Window:CreateElement("ScrollBarToggle", Window.WindowSection, "Toggle", {
+        Title = "Scroll Bar Enabled",
+        Value = Window.ScrollBarVisible,
+        Callback = function(...)
+            Window:SetScrollBarEnabled(...)
+        end
+    })
+    Window:CreateElement("ResizableToggle", Window.WindowSection, "Toggle", {
+        Title = "Resizable",
+        Value = Window.Resizable,
+        Callback = function(...)
+            Window:SetResizable(...)
+        end
+    })
+end
+
+
+-- fluent
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+
+-- Constructor
+function AuctusAPI.CreateApp(library: Library, ...)
+    local constructors = {
+        Cassade = Cassade.new,
+        WindUI = WindUIClass.new
+    }
+    return constructors[library](...)
+end
 
 -- ═══════════════════════════════════════════════════════════════
 -- 🛠️ UTILITY FUNCTIONS
