@@ -54,10 +54,10 @@ end
 -- ═══════════════════════════════════════════════════════════════
 -- 🗝️ KEY SYSTEM
 -- ═══════════════════════════════════════════════════════════════
-local JunkieKeySystem = loadstring(game:HttpGet("https://junkie-development.de/sdk/JunkieKeySystem.lua"))()
-local API_KEY = "2383bf96-9085-4015-b6f9-476b19ffe24d"
-local SERVICE = "Get Key!"
-local PROVIDER = "Get Key!"
+local JunkieKeySystem = loadstring(game:HttpGet("https://jnkie.com/sdk/library.lua"))()
+JunkieKeySystem.identifier = "14361"
+JunkieKeySystem.service = "Get Key!"
+JunkieKeySystem.provider = "Get Key!"
 
 local KeySystem = {}
 KeySystem.__index = KeySystem
@@ -71,20 +71,24 @@ function AuctusAPI.newKeySystem(apiKey: string, serviceName: string, providerNam
 end
 
 function KeySystem:GetLink()
-    return JunkieKeySystem.getLink(self.ApiKey, self.Provider, self.Service)
+    return JunkieKeySystem.get_key_link()
 end
 
 function KeySystem:ValidateKey(key: string): boolean
-    return JunkieKeySystem.verifyKey(self.ApiKey, key, self.Service)
+    local result = JunkieKeySystem.check_key(key)
+    if result and result.valid then
+    return result and result.valid
 end
 
 --- old
 function AuctusAPI:GetKeyLink(): string
-    return JunkieKeySystem.getLink(API_KEY, PROVIDER, SERVICE)
+    return JunkieKeySystem.get_key_link()
 end
 
 function AuctusAPI:ValidateKey(key: string): boolean
-    return JunkieKeySystem.verifyKey(API_KEY, key, SERVICE)
+    local result = JunkieKeySystem.check_key(key)
+    if result and result.valid then
+    return result and result.valid
 end
 
 function AuctusAPI.MakeKeyPopup()
