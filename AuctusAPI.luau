@@ -76,7 +76,6 @@ end
 
 function KeySystem:ValidateKey(key: string): boolean
     local result = JunkieKeySystem.check_key(key)
-    if result and result.valid then
     return result and result.valid
 end
 
@@ -87,7 +86,6 @@ end
 
 function AuctusAPI:ValidateKey(key: string): boolean
     local result = JunkieKeySystem.check_key(key)
-    if result and result.valid then
     return result and result.valid
 end
 
