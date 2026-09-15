@@ -1,5 +1,5 @@
 local studio = game:GetService("RunService"):IsStudio()
-local path = studio and game:GetService("Players").LocalPlayer.PlayerGui or game:GetService("CoreGui")
+local path = studio and game:GetService("Players").LocalPlayer.PlayerGui or gethui()
 local panel = path:FindFirstChild("Apex Universal Script")
 
 if panel then panel:Destroy() end
