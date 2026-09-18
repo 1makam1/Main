@@ -1,8 +1,10 @@
 local studio = game:GetService("RunService"):IsStudio()
 local path = studio and game:GetService("Players").LocalPlayer.PlayerGui or gethui()
-local panel = path:FindFirstChild("Apex Universal Script")
+local panels = game:GetService("CollectionService"):GetTagged("Apex Universal Script")
 
-if panel then panel:Destroy() end
+for _, panel in panels do
+    panel:Destroy()
+end
 
 local ScreenGui = Instance.new("ScreenGui", path)
 local Container = Instance.new("Frame", ScreenGui)
@@ -19,7 +21,7 @@ local function InitContainer()
 	local UICorner = Instance.new("UICorner", List)
 	local UIListLayout = Instance.new("UIListLayout", List)
 
-	ScreenGui.Name = "Apex Universal Script"
+    ScreenGui:AddTag("Apex Universal Script")
 
 	Container.Name = "Container"
 	Container.BackgroundTransparency = 1
@@ -180,6 +182,9 @@ end
 InitContainer()
 InitAutoExecute()
 AntiAFK()
+pcall(function()
+    sethiddenstack(1, true)
+end)
 
 MakeDivider()
 MakeSection("——— Universal ———")
