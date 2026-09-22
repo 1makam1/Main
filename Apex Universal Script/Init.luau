@@ -195,6 +195,7 @@ MakeDivider()
 MakeSection("— Explorer Debugger —")
 MakeButton("Dark Dex")
 MakeButton("Dark Dex ++")
+MakeButton("VEX Explorer")
 
 MakeDivider()
 MakeSection("——— Remote Spy ———")
