@@ -172,9 +172,8 @@ local function MakeButton(buttonName: string, color: "Green" | "Yellow" | "Red")
 	button_stroke.Thickness = 0.05
 
 	task.spawn(function()
-		local file = "https://raw.githubusercontent.com/1makam1/Main/refs/heads/main/Apex%20Universal%20Script/"..buttonName:gsub(" ", "%%20")..".luau"
-		local func = loadstring(game:HttpGet(file))
-
+		local code = require(`{buttonName}`)
+		local func = loadstring(code)
 		button.MouseButton1Click:Connect(func)
 	end)
 end
